@@ -816,7 +816,7 @@ def main():
     sample_names, file_names, sample_objects = xml_to_data(uploaded_file)
     data_table = pd.DataFrame({"Sample Names": sample_names, "File Names": file_names})
     st.sidebar.markdown("**Your Data:**")
-    st.sidebar.dataframe(data_table, height=250, hide_index=True)
+    st.sidebar.dataframe(data_table, height=250, use_container_width = True, hide_index=True)
 
     # Monitor changes in the file upload widget and update data when a new file is uploaded
     # if uploaded_file is not None:
