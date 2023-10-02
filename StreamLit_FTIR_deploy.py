@@ -886,7 +886,7 @@ def main():
             st.header("What is happening? And how to use it.")
 
             image = Image.open(
-                'FTIR_Analysis/Flowchart.drawio.png')
+                'Flowchart.drawio.png')
 
             st.image(image, )
 
