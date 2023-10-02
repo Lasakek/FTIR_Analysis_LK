@@ -975,8 +975,6 @@ def main():
 
     with tab2:
         st.header("Principal Component Analysis (PCA)")
-        st.markdown(
-            '''*Principal Component Analysis (PCA) is a statistical technique used for dimensionality reduction and data analysis. It simplifies complex data by transforming it into a new coordinate system, where the axes (principal components) are orthogonal and ranked by their importance in capturing data variance. PCA helps identify patterns, reduce noise, and visualize data in a more concise manner.*''')
         st.divider()
         st.markdown("**Try switching on/off Normalization.**	:chart_with_downwards_trend: 	:chart_with_upwards_trend:")
 
@@ -990,6 +988,8 @@ def main():
 
     with tab3:
         st.header("Peak Identification")
+        st.divider()
+
         # st.markdown(
         #     '''*Peak deconvolution is a process of decomposing overlapping peaks to extract information about the hidden peak. Peak deconvolution can provide more accurate and detailed information about overlapping peaks, allowing for better analysis and interpretation of the data.*''')
         # st.divider()
@@ -1142,6 +1142,8 @@ def main():
 
 
         st.title('Correlation Heatmap  	:hot_face: :cold_face:')
+        st.divider()
+
 
 
         if 'heat_bool' not in st.session_state:
