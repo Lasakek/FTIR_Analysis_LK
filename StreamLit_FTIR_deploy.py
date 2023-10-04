@@ -871,6 +871,7 @@ def main():
 
         # Display the flowchart using Streamlit
         # Display an image from a file
+       
         # st.image("X:\FB4\BIO_VT\06_FG_Spadiut\4_Personal_folders\Interns and Students\LKE\Pictures\StreamLitApps\FTIR\Flowchart.drawio.png", caption="Your Image", use_column_width=True)
 
         st.divider()
@@ -882,7 +883,7 @@ def main():
             st.header("What is happening? And how to use it.")
 
             image = Image.open(
-                'X:\\FB4\\BIO_VT\\06_FG_Spadiut\\4_Personal_folders\\Interns and Students\\LKE\\Pictures\\StreamLitApps\\FTIR\\Flowchart.drawio.png')
+                'Flowchart.drawio.png')
 
             st.image(image, )
 
