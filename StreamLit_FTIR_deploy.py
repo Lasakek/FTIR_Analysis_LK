@@ -13,7 +13,7 @@ from scipy.special import wofz
 from PIL import Image
 from io import BytesIO
 import base64  # Import base64
-
+import html5lib
 
 import plotly.graph_objects as go
 import hashlib
@@ -74,7 +74,7 @@ def xml_to_data(uploaded_file):
 
             content = file.read()
 
-            soup = BeautifulSoup(content, 'lxml')
+            soup = BeautifulSoup(content, 'html5lib')
 
             values_tag = soup.find('values')
             if values_tag:
