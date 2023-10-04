@@ -74,7 +74,7 @@ def xml_to_data(uploaded_file):
 
             content = file.read()
 
-            soup = BeautifulSoup(content, 'html5lib')
+            soup = BeautifulSoup(content, 'html.parser')
 
             values_tag = soup.find('values')
             if values_tag:
