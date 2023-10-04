@@ -1,5 +1,5 @@
 streamlit
-beautifulsoup4
+beautifulsoup4==4.9.3
 scipy
 pandas
 scikit-learn
@@ -8,4 +8,4 @@ plotly
 numpy
 Pillow
 bokeh
-lxml
+lxml==4.6.3
