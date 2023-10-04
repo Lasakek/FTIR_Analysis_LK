@@ -56,6 +56,48 @@ def iterative_average(spectrum, threshold=0.001):
 
     return smoothed
 
+#-------------Read in Data from .csv file---------------#
+def csv_to_data(uploaded_file):
+    if uploaded_file is not None:
+        file_names = []
+        sample_names = []
+        sample_objects = []
+        file_idx = 0
+        for file in uploaded_file:
+            df = pd.read_csv(file)
+
+            try:
+
+                # Extract 'x' values (excluding the first row)
+                x_values = df.iloc[0:, 0]
+                # st.write("this is x", x_values)
+
+                # Extract 'y' values (excluding the first row)
+                y_values = df.iloc[1:, 1]
+                # print(y_values)
+            except Exception as e:
+                st.warning("Please ensure the correct structure of the .csv file: \n x-values, y-values\n x1, y1\n x2, y2")
+
+            sample_name = f"Sample_{file_idx}"
+
+            sample = FTIR(sample_name)
+            sample.add_data('X', x_values)
+            # st.write(x_values)
+            # print("This is Y_mean", np.mean(y_values))
+            sample.add_data('Y', y_values)
+            # st.write(y_values)
+            sample.add_file_name(file.name)
+
+            if file.name in file_names and not error:
+                error = st.error(f"Please don't upload duplicate files", icon="🚨")
+            else:
+                sample_objects.append(sample)
+                file_names.append(file.name)
+                sample_names.append(sample_name)
+            file_idx = file_idx + 1
+
+    return sample_names, file_names, sample_objects #returns a np.array of sample_name, each sample_name is a FTIR object and contains x and y data
+
 
 #----------Reading in Data from .xml files---------------#
 def xml_to_data(uploaded_file):
@@ -807,10 +849,18 @@ def main():
 
 
 
-    uploaded_file = st.sidebar.file_uploader("Choose a file", type=['xml'], help='You are only able to upload .xml files.', accept_multiple_files=True)
+    csv_toggle = st.sidebar.toggle("Turn on to upload .csv files.")
 
-    sample_names, file_names, sample_objects = xml_to_data(uploaded_file)
-    data_table = pd.DataFrame({"Sample Names": sample_names, "File Names": file_names})
+    if not csv_toggle:
+        uploaded_file = st.sidebar.file_uploader("Choose a file", type=['xml'], help='You are only able to upload .xml files.', accept_multiple_files=True)
+        sample_names, file_names, sample_objects = xml_to_data(uploaded_file)
+        data_table = pd.DataFrame({"Sample Names": sample_names, "File Names": file_names})
+    else:
+        uploaded_file = st.sidebar.file_uploader("You are only able to upload .csv files with x-values in first columns and y-values in the second column.", type=['csv'],
+                                                 accept_multiple_files=True)
+        sample_names, file_names, sample_objects = csv_to_data(uploaded_file)
+        data_table = pd.DataFrame({"Sample Names": sample_names, "File Names": file_names})
+       
     st.sidebar.markdown("**Your Data:**")
     st.sidebar.dataframe(data_table, use_container_width=True, height=250, hide_index=True)
 
