@@ -9,3 +9,4 @@ numpy==1.21.2
 Pillow
 bokeh==3.2.1
 bs4==0.0.1
+lxml
