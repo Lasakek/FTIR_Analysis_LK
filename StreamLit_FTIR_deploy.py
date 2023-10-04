@@ -11,16 +11,12 @@ import plotly.express as px
 import numpy as np
 from scipy.special import wofz
 from PIL import Image
-from io import BytesIO
-import base64  # Import base64
 import html5lib
-
+from io import BytesIO
+import base64
 import plotly.graph_objects as go
 import hashlib
-
-
 import matplotlib.cm as cm
-
 from bokeh.plotting import figure
 
 #--------------------------------Defaults------------------------------#
@@ -74,7 +70,7 @@ def xml_to_data(uploaded_file):
 
             content = file.read()
 
-            soup = BeautifulSoup(content, 'html.parser')
+            soup = BeautifulSoup(content, 'html5lib')
 
             values_tag = soup.find('values')
             if values_tag:
@@ -816,7 +812,7 @@ def main():
     sample_names, file_names, sample_objects = xml_to_data(uploaded_file)
     data_table = pd.DataFrame({"Sample Names": sample_names, "File Names": file_names})
     st.sidebar.markdown("**Your Data:**")
-    st.sidebar.dataframe(data_table, height=250, use_container_width = True, hide_index=True)
+    st.sidebar.dataframe(data_table, use_container_width=True, height=250, hide_index=True)
 
     # Monitor changes in the file upload widget and update data when a new file is uploaded
     # if uploaded_file is not None:
@@ -870,12 +866,12 @@ def main():
         # Brief Overview
         st.markdown("**This Streamlit app is designed to analyze FTIR (Fourier-Transform Infrared Spectroscopy)"
                     " data to extract information about the secondary structure of proteins."
-                    "This App is made for scientific purposes.**")
+                    " This App is made for scientific purposes.**")
         st.write("\n\n\n\n\n\n")  # Adds three lines of vertical space
 
         # Display the flowchart using Streamlit
         # Display an image from a file
-        # st.image("https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=Flowchart.drawio.png#R7Vxde6I6EP41Xm4f5MOPy7W13Z7t7tOz7m67lxGi5jQSNsRW99efBBKEgCJW0G31QkkISZh35s3MEGxZl%2FPlDQXB7AvxIG6ZhrdsWVct02wbjsF%2FRM0qrnFsM66YUuTJRuuKEfoD1ZWydoE8GGYaMkIwQ0G20iW%2BD12WqQOUkpdsswnB2VEDMIW5ipELcL72AXlsFtf2zO66%2FhNE05kaud3px2fmQDWWdxLOgEdeUlXWsGVdUkJYfDRfXkIshKfk8nC7esB3T52bf%2F4Nf4Mfg8%2Ffv%2F78EHd2XeWS5BYo9NneXd8N573h19vP%2FYeXH7M79GP8uPj9oS37fgZ4IQUmb5atlAQpWfgeFL0YLWswY3PMD9v88D%2FI2EoiDhaM8CpC2YxMiQ%2FwHSGBbDchPpPN2qIMfe%2BjQJaXx5i4T3HVNcJYjsFLsn2Pl0JGyVMCnuggQUI0xmAM8QC4T9NoopcEE8pP%2BcSHoiuPa4O8l%2FXkhuvaAVwi9ij6unBk6ZccRhxfLdWcRGElCzsCIoUr5pBSRgnPDSRzyOiKN6AQA4aesxoLpOJPk3bJpfcE8XFNQxlpv3%2FR7RjJR2EoLdbsG9keQ7KgLpSdpDVG69eyjUxHtqF1xACdQpbriIMLVqlmgWgQbp6%2FaWTHsbpGpXlVba%2FuQ7bnB%2FGMVSmFzboqsqYqluWcLeuvtyyumRem1U8%2BjnMYy3L6F%2F3Up9ttxM4ET2wZtsyMtk%2F6dVc3YpLKAt%2BzSfpchI%2FKCkXh19pARXFtlVFpP7OM9XUbOZrN2K%2FT0Zh%2FX4O1tSXEseox0U0T3mhVneJ5HcqOClE%2Bm1E1c4iVbEs7q7HVLKMs7e5uSnwovbFyenP9%2FfYbr7kCDPAfMhFCAO6M%2F4zAPOCi3qxXAtOXGWJwFIBIuC88fs3qWlqHuEwGUwzCUGpAiYJUA%2FgZUgaXW6FTZzUeUeb7sg5N2yrenKXCUtvYDHYGpqpropHDZLhkFLgM%2BVNe%2Fx2MFxjQNUYTSub85%2FHLHf%2Fm5rcNIqMcoqbknKh6maA7dQk6H2gPQAgx4oxjGpeEUshlTnwxtO%2Fx76%2BEzgFGf0Bc%2BzcI2Ty6kM8rUzWsm15xTN1t2tX%2FilMcxdpWQ5SkD2Vv98LKL6kpx5Bn73sInnjNrcfxRxPkSvownpFg7xF0ScQuV5Ci5xjZV1HLBKPgp2wqjj%2FVTDlmb0NK6ni8nuccicE1YvEqeorcrQvSOb4g8%2B7hmbyPSd6WbVwYZtbcdPR3TiVbnCF7xRp3YP4uGMouSxCXXlITf9t57qDId1EAcOQVzgOuOtFMP3JVWYUoPDxd1xLunA4993IiHnFFk%2BHNvdQlY0JEjFNC3NzWA3HI5QQwhphMKZhz6QV8MeWzhVQ%2Fd78%2BUYoMWkLFNHXyfpIBUwjZx0bIzDsx743393lQkmRyk8JxMrm9ZhYjziQXRupjFmtx5bxuV3ODasrr2npetySiyLVvYjkyCxJ0nAqhCBiuF75bmIl4C6TY1qTdOfqyZRZ4BvHiNBLyzrsBbwEGPSY5ARjyD%2FG%2FwRB5i8g%2FG%2FIVhL5NKGzj5KDovns3oRrYDYSH2aWzt%2BcanCQFdV079DYjq3jC9a6p%2BfjjrLZvQm1tpxm11cdpRm37Z7U9NbXVk3HOAZNxdSlvUd6vejLOaSL6UatDSuWjx7JYPUL5AhhFyxIzOJF0fvfo%2FpplnhnktBhE2FU7a%2FWvYRC7k97OWax9NbDJlmE7OzDL7pfXxDL5HIva6mRcQ8AW9I0G93pG6wQYKp9jeW8M1cx24PT%2Bx61GUZptVmt0E9lmlYJT7LD31mEtldKtK8XsFI%2Bza%2FzSPfDW4WIAz2%2FFVLOdcpPoNOQ%2BaHFz91XRR3azVK9Gf0FFstpQ22a3%2FZKaDKOTM4xs9PGJOwdzvnjLbdLxTi4QITtidOEKz6GlNo%2BWuxSVNlLX5RPoUUvv%2BD7BOct8aH5q6AGx%2FsB0X3pyODs56TfVMt3WtWnJEayz8fG2U0Jala6uib%2Fyee4b6EMaPSi79SdiN7tksoi%2FxG7UgIQhGuNkA3zCdWPIXiD0EyI7Nfo6mT2Tak3eRlcqeHQXFK8GlBODsNcymWUFHHHKPQlRBJB1heFE9CFEhVzObdrpOfK8iEsARlNRQWNZJBd8lPVJQ0oYkBd%2FaPfqfAOno7m97YJXcIowNHXLPxyIO%2FwHwxnErSBaO4KYo%2B%2FDgZhPd8o3pu4pDChxIee6gj2F%2FIZZFjQlbpfLLErgbJY3DNEfMI66EtKWiwzv1xm0nCvRF%2FdCwnVuJ%2FYcNI9gwv0MrSoNZN%2FQPJaOKsub2PXfSaqD3M6CzCPWPN12C1DWA%2BzDgZxP3kmQN27PPeO7GV%2F9eXy%2FAF%2FrMPjy4vqPemKfZ%2F13R9bwfw%3D%3D", caption="Your Image", use_column_width=True)
+        # st.image("X:\FB4\BIO_VT\06_FG_Spadiut\4_Personal_folders\Interns and Students\LKE\Pictures\StreamLitApps\FTIR\Flowchart.drawio.png", caption="Your Image", use_column_width=True)
 
         st.divider()
 
@@ -886,7 +882,7 @@ def main():
             st.header("What is happening? And how to use it.")
 
             image = Image.open(
-                'Flowchart.drawio.png')
+                'X:\\FB4\\BIO_VT\\06_FG_Spadiut\\4_Personal_folders\\Interns and Students\\LKE\\Pictures\\StreamLitApps\\FTIR\\Flowchart.drawio.png')
 
             st.image(image, )
 
@@ -928,8 +924,7 @@ def main():
             st.write("\n")
 
             st.subheader("Peak Fitting")
-            st.markdown(
-                "**Peak fitting, also known as deconvolution, is a data analysis technique used to separate and quantify individual peaks or components within a complex dataset. This technique is particularly useful when multiple overlapping peaks are present in the data, making it challenging to extract meaningful information. An itereative least-squares optimization algorithm is applied. This fits a predicted function to the original data, which is a composite function made up by a certain number of Gauss-Fucntions, which represent single peaks. By adjusting the parameters of the single Gauss-Functions, the Rooted-Mean-Square-Error (RMSE) between the original and the fitted spectrum is minimized. This step allows a more detailed inspection of differences between the samples.**")
+            st.markdown("**Peak fitting, also known as deconvolution, is a data analysis technique used to separate and quantify individual peaks or components within a complex dataset. This technique is particularly useful when multiple overlapping peaks are present in the data, making it challenging to extract meaningful information.\n The first step in this process is to provide reasonable choice of the amount of peaks, their location and shape. These are used to construct a initial comosite function of all the peaks. The objective is to minimize the difference between the original data and the predicted function. This is achieved, by iteratively adjusting the used peak parameters. Different minimization problems can be defined and various algorithmsfor the parameter optimization, be used. Also can different peak shapes be applied. These options can result in fairly different outcomes when there is a high degree of overlapping present. The residuals between original and fitted data can give some kind of direction of how good a fit is. A high randomnes of these residuals indicates a good fit, a high grade of order (function-like/wavy shapes) indicates a bad fit.**")
 
             st.write("\n")
 
@@ -975,6 +970,8 @@ def main():
 
     with tab2:
         st.header("Principal Component Analysis (PCA)")
+        # st.markdown(
+        #     '''*Principal Component Analysis (PCA) is a statistical technique used for dimensionality reduction and data analysis. It simplifies complex data by transforming it into a new coordinate system, where the axes (principal components) are orthogonal and ranked by their importance in capturing data variance. PCA helps identify patterns, reduce noise, and visualize data in a more concise manner.*''')
         st.divider()
         st.markdown("**Try switching on/off Normalization.**	:chart_with_downwards_trend: 	:chart_with_upwards_trend:")
 
@@ -988,8 +985,6 @@ def main():
 
     with tab3:
         st.header("Peak Identification")
-        st.divider()
-
         # st.markdown(
         #     '''*Peak deconvolution is a process of decomposing overlapping peaks to extract information about the hidden peak. Peak deconvolution can provide more accurate and detailed information about overlapping peaks, allowing for better analysis and interpretation of the data.*''')
         # st.divider()
@@ -1142,8 +1137,6 @@ def main():
 
 
         st.title('Correlation Heatmap  	:hot_face: :cold_face:')
-        st.divider()
-
 
 
         if 'heat_bool' not in st.session_state:
