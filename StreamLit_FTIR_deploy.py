@@ -1038,7 +1038,7 @@ def main():
         st.header("Peak Identification")
         # st.markdown(
         #     '''*Peak deconvolution is a process of decomposing overlapping peaks to extract information about the hidden peak. Peak deconvolution can provide more accurate and detailed information about overlapping peaks, allowing for better analysis and interpretation of the data.*''')
-        # st.divider()
+        st.divider()
         if not select_samples:
             st.warning("Please upload files and select at least one Sample.")
         else:
