@@ -1122,9 +1122,15 @@ def main():
 
                 new_row_names.append(file_name)
             raw_data.rename(columns=new_column_names, inplace=True)
-            peak_percentage[0] = new_row_names
+            st.write(peak_percentage)
+            st.write(type(peak_percentage))
+            # peak_percentage[0] = new_row_names
             st.write(raw_data, peak_percentage, corr)
 
+            # with pd.ExcelWriter('FTIR_Results.xlsx', engine='xlsxwriter') as writer:
+            #     df1.to_excel(writer, sheet_name='Sheet1', index=False)
+            #     df2.to_excel(writer, sheet_name='Sheet2', index=False)
+            #     df3.to_excel(writer, sheet_name='Sheet3', index=False)
 
 
 
