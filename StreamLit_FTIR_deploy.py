@@ -264,7 +264,7 @@ def bar_plot(data):
 
     # Count the occurrences of each peak index
     peak_counts = Counter(flattened_list)
-    print(peak_counts)
+    # print(peak_counts)
 
     # Step 3: Create a bar plot
     counts = list(peak_counts.values())
@@ -304,7 +304,7 @@ def bar_plot(data):
 def second_der_plots(data, show_plots):
     # Define the number of columns for the layout
     num_columns = 4
-    print(data)
+    # print(data)
     if show_plots:
         st.subheader("Sample Plots")
         # Calculate the second derivative of each sample
@@ -412,7 +412,7 @@ def peak_fit_lev(data, initial_guess, selected_samples):
             # st.write(2)
             fit_quality = y_fitted - y_data
             RMSE = (np.sqrt(np.mean((y_fitted - y_data) ** 2)) / max(y_data) * 100)
-            print(RMSE)
+            # print(RMSE)
             return np.array(fit_quality)
 
 
@@ -759,11 +759,6 @@ def main():
     st.sidebar.markdown("**Your Data:**")
     st.sidebar.dataframe(data_table, use_container_width=True, height=250, hide_index=True)
 
-    # Monitor changes in the file upload widget and update data when a new file is uploaded
-    # if uploaded_file is not None:
-    #     update_variables(uploaded_file)
-
-
 
 
     #---Chose a Selection of samples---#
@@ -1096,6 +1091,7 @@ def main():
                     start_the_heat = st.button("Calculate and Display Heatmap")
                     if start_the_heat:
                         corr_matrix = plot_heatmap(parameters)
+                        st.session_state['corr_matrix'] = corr_matrix
 
 
             else:
@@ -1109,7 +1105,7 @@ def main():
 
         if download_button:
             # if corr_matrix and heatmap_df and data is not None:
-            corr = corr_matrix
+            corr = st.session_state['corr_matrix']
             peak_percentage = heatmap_df
             raw_data = data
 
