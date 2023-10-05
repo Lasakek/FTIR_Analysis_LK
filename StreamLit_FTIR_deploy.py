@@ -1106,9 +1106,10 @@ def main():
         download_button = st.button("Download Results")
 
         if download_button:
-            # corr_matrix
-            # peak_percentage = st.session_state['heatmap_df']
-            # raw_data = data
+
+            peak_percentage = st.session_state['heatmap_df']
+            raw_data = data
+            st.write(corr_matrix, peak_percentage, raw_data)
             new_column_names = []
             new_row_names = []
             st.write(sample_objects)
@@ -1122,7 +1123,8 @@ def main():
                 new_column_names.append(item)
 
                 new_row_names.append(file_name)
-            st.write(new_column_names, new_row_names)
+
+            # st.write(new_column_names, new_row_names)
 
 
 
