@@ -1108,25 +1108,25 @@ def main():
         download_button = st.button("Download Results")
 
         if download_button:
-            if corr_matrix and heatmap_df and data is not None:
-                corr = corr_matrix
-                peak_percentage = heatmap_df
-                raw_data = data
+            # if corr_matrix and heatmap_df and data is not None:
+            corr = corr_matrix
+            peak_percentage = heatmap_df
+            raw_data = data
 
-                new_column_names = [{'x':'Wavenumber [cm$^-$$^1$]'}]
-                new_row_names = []
+            new_column_names = [{'x':'Wavenumber [cm$^-$$^1$]'}]
+            new_row_names = []
 
-                for sample in selected_samples:
-                    index = int(sample[7:])
-                    sample_object = sample_objects[index]
-                    file_name = sample_object.give_file_name()
-                    item = {sample: file_name}
-                    new_column_names.append(item)
+            for sample in selected_samples:
+                index = int(sample[7:])
+                sample_object = sample_objects[index]
+                file_name = sample_object.give_file_name()
+                item = {sample: file_name}
+                new_column_names.append(item)
 
-                    new_row_names.append(file_name)
-                raw_data.rename(columns=new_column_names, inplace=True)
-                peak_percentage['Sample'] = new_row_names
-                st.write(raw_data, peak_percentage, corr)
+                new_row_names.append(file_name)
+            raw_data.rename(columns=new_column_names, inplace=True)
+            peak_percentage['Sample'] = new_row_names
+            st.write(raw_data, peak_percentage, corr)
 
             # elif corr_matrix and heatmap_df is None:
             #     st.warning("Please do Peak Deconvolution and Correlation Heatmap to have these results in this Excel-File")
