@@ -719,7 +719,7 @@ def plot_heatmap(parameters):
 
 
     miami = dropped.drop('Sample', axis=1)
-    for_real = round(miami.corr(),2)
+    for_real = miami.corr()
     # print(for_real)
 
     fig = px.imshow(for_real, text_auto=True, aspect="auto")
