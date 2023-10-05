@@ -1134,7 +1134,8 @@ def main():
                 output.seek(0)
                 st.download_button('Please confirm', data=output, file_name='Results.xlsx', key='download_button')
             except Exception as e:
-                st.warning("Fuck")
+                st.write(e)
+                # st.warning("Fuck")
             #
 
 
