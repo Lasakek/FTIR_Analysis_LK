@@ -719,7 +719,7 @@ def plot_heatmap(parameters):
 
 
     miami = dropped.drop('Sample', axis=1)
-    for_real = miami.corr()
+    for_real = round(miami.corr(),2)
     # print(for_real)
 
     fig = px.imshow(for_real, text_auto=True, aspect="auto")
@@ -1102,38 +1102,39 @@ def main():
         st.title("Here you can download your Results :open_hands:")
         st.divider()
 
+        download_button = st.button("Download Results as Excel File")
+        if download_button:
+            try:
+                corr = st.session_state['corr_matrix']
+                peak_percentage = st.session_state['heatmap_df']
+                raw_data = data
 
-        try:
-            corr = st.session_state['corr_matrix']
-            peak_percentage = st.session_state['heatmap_df']
-            raw_data = data
+                new_column_names = {'x':'Wavenumber [cm$^-$$^1$]'}
+                new_row_names = []
 
-            new_column_names = {'x':'Wavenumber [cm$^-$$^1$]'}
-            new_row_names = []
+                for sample in selected_samples:
+                    index = int(sample[7:])
+                    sample_object = sample_objects[index]
+                    file_name = sample_object.give_file_name()
+                    # item = {sample: file_name}
+                    # st.write(item)
+                    new_column_names[sample] = file_name
 
-            for sample in selected_samples:
-                index = int(sample[7:])
-                sample_object = sample_objects[index]
-                file_name = sample_object.give_file_name()
-                # item = {sample: file_name}
-                # st.write(item)
-                new_column_names[sample] = file_name
-
-                new_row_names.append(file_name)
-            raw_data.rename(columns=new_column_names, inplace=True)
-            # st.write(peak_percentage)
-            # st.write(type(peak_pe rcentage))
-            peak_percentage[0] = new_row_names
-            # st.write(raw_data, peak_percentage, corr)
-            output = BytesIO()
-            with pd.ExcelWriter('FTIR_Results.xlsx', engine='xlsxwriter') as writer:
-                raw_data.to_excel(writer, sheet_name='Sheet1', index=False)
-                peak_percentage.to_excel(writer, sheet_name='Sheet2', index=False)
-                corr.to_excel(writer, sheet_name='Sheet3', index=False)
-            output.seek(0)
-            st.download_button('Download Results as Excel File', data=output, file_name='Results.xlsx', key='download_button')
-        except Exception as e:
-            st.warning("Fuck")
+                    new_row_names.append(file_name)
+                raw_data.rename(columns=new_column_names, inplace=True)
+                # st.write(peak_percentage)
+                # st.write(type(peak_pe rcentage))
+                peak_percentage[0] = new_row_names
+                # st.write(raw_data, peak_percentage, corr)
+                output = BytesIO()
+                with pd.ExcelWriter('FTIR_Results.xlsx', engine='xlsxwriter') as writer:
+                    raw_data.to_excel(writer, sheet_name='Sheet1', index=False)
+                    peak_percentage.to_excel(writer, sheet_name='Sheet2', index=False)
+                    corr.to_excel(writer, sheet_name='Sheet3', index=False)
+                output.seek(0)
+                st.download_button('Please confirm', data=output, file_name='Results.xlsx', key='download_button')
+            except Exception as e:
+                st.warning("Fuck")
             #
 
 
