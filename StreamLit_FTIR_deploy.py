@@ -1112,7 +1112,9 @@ def main():
             # new_column_names = {}
             # new_row_name = {}
             st.write(sample_objects)
+            st.write(selected_samples)
             # for sample in selected_samples:
+            #
             #     sample_object = sample_objects[sample]
             #
             #     new_column_names = {sample:}
