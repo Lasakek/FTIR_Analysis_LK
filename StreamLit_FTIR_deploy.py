@@ -1105,33 +1105,36 @@ def main():
 
         if download_button:
             # if corr_matrix and heatmap_df and data is not None:
-            corr = st.session_state['corr_matrix']
-            peak_percentage = st.session_state['heatmap_df']
-            raw_data = data
+            try:
+                corr = st.session_state['corr_matrix']
+                peak_percentage = st.session_state['heatmap_df']
+                raw_data = data
 
-            new_column_names = {'x':'Wavenumber [cm$^-$$^1$]'}
-            new_row_names = []
+                new_column_names = {'x':'Wavenumber [cm$^-$$^1$]'}
+                new_row_names = []
 
-            for sample in selected_samples:
-                index = int(sample[7:])
-                sample_object = sample_objects[index]
-                file_name = sample_object.give_file_name()
-                # item = {sample: file_name}
-                # st.write(item)
-                new_column_names[sample] = file_name
+                for sample in selected_samples:
+                    index = int(sample[7:])
+                    sample_object = sample_objects[index]
+                    file_name = sample_object.give_file_name()
+                    # item = {sample: file_name}
+                    # st.write(item)
+                    new_column_names[sample] = file_name
 
-                new_row_names.append(file_name)
-            raw_data.rename(columns=new_column_names, inplace=True)
-            st.write(peak_percentage)
-            st.write(type(peak_percentage))
-            # peak_percentage[0] = new_row_names
-            st.write(raw_data, peak_percentage, corr)
+                    new_row_names.append(file_name)
+                raw_data.rename(columns=new_column_names, inplace=True)
+                st.write(peak_percentage)
+                st.write(type(peak_percentage))
+                # peak_percentage[0] = new_row_names
+                st.write(raw_data, peak_percentage, corr)
 
-            # with pd.ExcelWriter('FTIR_Results.xlsx', engine='xlsxwriter') as writer:
-            #     raw_data.to_excel(writer, sheet_name='Sheet1', index=False)
-            #     peak_percentage.to_excel(writer, sheet_name='Sheet2', index=False)
-            #     corr.to_excel(writer, sheet_name='Sheet3', index=False)
+                # with pd.ExcelWriter('FTIR_Results.xlsx', engine='xlsxwriter') as writer:
+                #     raw_data.to_excel(writer, sheet_name='Sheet1', index=False)
+                #     peak_percentage.to_excel(writer, sheet_name='Sheet2', index=False)
+                #     corr.to_excel(writer, sheet_name='Sheet3', index=False)
 
+            except Exception as e:
+                st.warning("Fuck")
 
 
 
