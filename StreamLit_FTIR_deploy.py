@@ -1109,16 +1109,20 @@ def main():
             # corr_matrix
             # peak_percentage = st.session_state['heatmap_df']
             # raw_data = data
-            # new_column_names = {}
-            # new_row_name = {}
+            new_column_names = {}
+            new_row_names = {}
             st.write(sample_objects)
             st.write(selected_samples)
-            # for sample in selected_samples:
-            #
-            #     sample_object = sample_objects[sample]
-            #
-            #     new_column_names = {sample:}
+            for sample in selected_samples:
 
+                index = int(sample[7:])
+                sample_object = sample_objects[index]
+                file_name = sample_object.give_file_name()
+                item = {sample:file_name}
+                new_column_names.append(item)
+
+                new_row_names.append(file_name)
+            st.write(new_column_names, new_row_names)
 
 
 
