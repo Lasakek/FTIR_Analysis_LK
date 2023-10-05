@@ -11,14 +11,7 @@ import plotly.express as px
 import numpy as np
 from scipy.special import wofz
 from PIL import Image
-import html5lib
-from io import BytesIO
-import base64
-import plotly.graph_objects as go
-import hashlib
-import matplotlib.cm as cm
-from bokeh.plotting import figure
-#yoo yo
+
 
 #--------------------------------Defaults------------------------------#
 # Default data
@@ -34,8 +27,9 @@ class FTIR:
    def add_file_name(self, file_name):
       self.file_name = file_name
 
-   # def give_file_name(self):
-   #    return self.file_name
+   def give_file_name(self):
+      return self.file_name
+
    def add_data(self, key, value):
       # Store data in the dictionary
       self.data[key] = value
@@ -434,89 +428,7 @@ def peak_fit_lev(data, initial_guess, selected_samples):
 
     progress_bar.empty()
     return parameter_result
-# def peak_fit_lev(data, initial_guess, selected_samples):
-#
-#     #drop empty rows in initial guesses
-#     initial_guess = initial_guess.dropna()
-#     # print("This is init:", initial_guess)
-#
-#     # getting fitting parameters from the initial guesses from the input
-#     mu = initial_guess['mu']
-#     A = initial_guess['A']
-#     sigma = initial_guess['sigma']
-#
-#     initial_params_lev = np.concatenate((mu, A, sigma))
-#     # st.write(initial_params)
-#
-#
-#
-#     # Define bounds for parameter optimization
-#
-#
-#
-#     center_bounds = [(center - 100, center + 100) for center in mu]
-#     lower_bounds ,_ = center_bounds
-#     amplitude_bounds = (0.01, None)  # Allow positive amplitudes only
-#     alpha_bounds = (0.01, None)  # Allow positive alpha values only
-#     gamma_bounds = (0.01, None)  # Allow positive gamma values only
-#
-#
-#
-#
-#
-#     # bounds = ()
-#
-#
-#
-#     # # Define bounds for parameter optimization
-#     # mu_bound = (1600, 1700)
-#     # A_bound = (0, np.inf)  # Allow positive amplitudes only
-#     # sigma_bound = (0, np.inf )  # Allow positive alpha values only
-#     # # gamma_bounds = (0.01, None)  # Allow positive gamma values only
-#     #
-#     #
-#     # for i, la in enumerate(mu_bound):
-#     #     if i == 0:
-#     #         lower_bounds = mu_bound[i] + A_bound[i], sigma_bound[i]
-#     #     else:
-#     #         upper_bounds = mu_bound[i] + A_bound[i], sigma_bound[i]
-#
-#
-#     parameter_result = {}
-#
-#     progress_bar = st.progress(0, text="Fitting the Peaks of each Sample. Please wait...")
-#
-#     for idx, sample in enumerate(selected_samples):
-#         y_data = data[sample]
-#         # print("This is Y_mean", np.mean(y_data))
-#         x_data = data['x']
-#         # st.write("We are at this sample: ", sample)
-#         # Define the objective function (sum of squared differences)
-#
-#         progress = (idx+1)/len(selected_samples)
-#         progress_bar.progress(progress, text=f"Fitting the Peaks of each Sample. Please wait...   Sample   {idx+1} of {len(selected_samples)} Samples in calculation")
-#
-#
-#         def objective_lev(params):
-#             y_fitted = composite_function_lev(x_data, params)
-#
-#             fit_quality = y_fitted - y_data
-#             RMSE = (np.sqrt(np.mean((y_fitted - y_data) ** 2)) / max(y_data) * 100)
-#             print(RMSE)
-#             return np.array(fit_quality)
-#
-#         result = least_squares(objective_lev, initial_params_lev, bounds=bounds, method="trf",gtol=1e-5, xtol=1e-5, ftol=1e-5)
-#
-#
-#
-#
-#
-#         # Extract optimized parameters
-#         optimized_params = result.x
-#         # st.write(optimized_params)
-#         parameter_result[sample] = optimized_params
-#     progress_bar.empty()
-#     return parameter_result
+
 
 def plot_fitted_spec_lev(x_data, y_raw, params, initial_guess, sample):
     # drop empty rows
@@ -821,26 +733,9 @@ def plot_heatmap(parameters):
                               tickfont=dict(size=20)))
 
         st.plotly_chart(fig)
-        # fig = go.Figure(data=go.Heatmap(
-        #     z=np.array(for_real),
-        #     x=for_real.index,
-        #     y=for_real.columns,
-        #     colorscale='Viridis',  # Customize the color scale as needed
-        #     text=np.array(for_real)  # Display z-values as text
-        # ))
-        # fig.update_layout(
-        #     xaxis=dict(tickmode='array', tickvals=np.arange(5)),
-        #     yaxis=dict(tickmode='array', tickvals=np.arange(5)),
-        #     width=800,  # Adjust the figure width as needed
-        #     height=800,  # Adjust the figure height as needed
-        # )
-        # st.plotly_chart(fig)
+    return for_real
 
 
-
-
-
-# update dataframe when uploading stuff
 def main():
     st.set_page_config(layout="wide")
     # Define content for the Analysis Page (you can create another tab for analysis)
@@ -907,7 +802,7 @@ def main():
     heatmap_df = []
 
     #----------Plotting in different Tabs--------------------#
-    tab0, tab1, tab2, tab3, tab4, tab5 = st.tabs(["\u2001 \u2001\u2001 Mainpage \u2001 \u2001 \u2001 ", "Plot Raw Data", "\u2001PCA\u2001", "Peak Identification", "Peak Deconvolution", "Correlation Heatmap"])
+    tab0, tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["\u2001 \u2001\u2001 Mainpage \u2001 \u2001 \u2001 ", "Plot Raw Data", "\u2001PCA\u2001", "Peak Identification", "Peak Deconvolution", "Correlation Heatmap", "Downloading Results"])
 
     with tab0:
         # Set the title and brief overview of the topic
@@ -1199,10 +1094,29 @@ def main():
             if st.session_state['heat_bool'] == True:
                 # Add 10 empty columns using a list comprehension
                 if 'heatmap_df' in st.session_state:
-                    plot_heatmap(parameters)
+                    corr_matrix = plot_heatmap(parameters)
 
             else:
                 st.warning("The Heatmap is based on the Peak Deconvolution Values, so please do this first. :fox_face:")
+
+    with tab6:
+        st.title("Here you can download your Results :open_hands:")
+        st.divider()
+
+        download_button = st.button("Download Results")
+
+        if download_button:
+            corr_matrix
+            peak_percentage = st.session_state['heatmap_df']
+            raw_data = data
+            new_column_names = {}
+            new_row_name = {}
+            st.write(sample_objects)
+            # for sample in selected_samples:
+            #     sample_object = sample_objects[sample]
+            #
+            #     new_column_names = {sample:}
+
 
 
 
