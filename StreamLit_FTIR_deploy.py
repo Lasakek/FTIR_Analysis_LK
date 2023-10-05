@@ -1104,7 +1104,7 @@ def main():
         st.divider()
 
         download_button = st.button("Download Results")
-        print(heatmap_df)
+
         if download_button:
             if corr_matrix and heatmap_df and data is not None:
                 corr = corr_matrix
@@ -1123,14 +1123,15 @@ def main():
 
                     new_row_names.append(file_name)
                 raw_data.rename(columns=new_column_names, inplace=True)
-                # peak_percentage['Samples'] =
+                peak_percentage['Sample'] = new_row_names
+                st.write(raw_data, peak_percentage, corr)
 
-            elif corr_matrix and heatmap_df is None:
-                st.warning("Please do Peak Deconvolution and Correlation Heatmap to have these results in this Excel-File")
-            elif corr_matrix is None and heatmap_df is not None:
-                st.warning("Please do Correlation Heatmap to have these results in this Excel-File")
-            elif corr_matrix and heatmap_df and data is None:
-                st.warning("Please upload and select files")
+            # elif corr_matrix and heatmap_df is None:
+            #     st.warning("Please do Peak Deconvolution and Correlation Heatmap to have these results in this Excel-File")
+            # elif corr_matrix is None and heatmap_df is not None:
+            #     st.warning("Please do Correlation Heatmap to have these results in this Excel-File")
+            # elif corr_matrix and heatmap_df and data is None:
+            #     st.warning("Please upload and select files")
 
 
 
