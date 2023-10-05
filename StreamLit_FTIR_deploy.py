@@ -1109,16 +1109,16 @@ def main():
             peak_percentage = heatmap_df
             raw_data = data
 
-            new_column_names = [{'x':'Wavenumber [cm$^-$$^1$]'}]
+            new_column_names = {'x':'Wavenumber [cm$^-$$^1$]'}
             new_row_names = []
 
             for sample in selected_samples:
                 index = int(sample[7:])
                 sample_object = sample_objects[index]
                 file_name = sample_object.give_file_name()
-                item = {sample: file_name}
-                st.write(item)
-                new_column_names.append(item)
+                # item = {sample: file_name}
+                # st.write(item)
+                new_column_names[sample] = file_name
 
                 new_row_names.append(file_name)
             raw_data.rename(columns=new_column_names, inplace=True)
