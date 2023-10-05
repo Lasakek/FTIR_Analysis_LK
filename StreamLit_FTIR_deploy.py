@@ -1109,7 +1109,9 @@ def main():
 
             peak_percentage = heatmap_df
             raw_data = data
-            st.write(corr_matrix, peak_percentage, raw_data)
+            if corr_matrix is not None:
+                corr = corr_matrix
+            st.write(corr, peak_percentage, raw_data)
             new_column_names = []
             new_row_names = []
             st.write(sample_objects)
