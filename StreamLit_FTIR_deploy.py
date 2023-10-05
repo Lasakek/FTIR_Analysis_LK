@@ -1122,7 +1122,7 @@ def main():
 
                 new_row_names.append(file_name)
             raw_data.rename(columns=new_column_names, inplace=True)
-            peak_percentage['Sample'] = new_row_names
+            peak_percentage[0] = new_row_names
             st.write(raw_data, peak_percentage, corr)
 
 
