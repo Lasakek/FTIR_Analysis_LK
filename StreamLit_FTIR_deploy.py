@@ -1107,7 +1107,7 @@ def main():
 
         if download_button:
 
-            peak_percentage = st.session_state['heatmap_df']
+            peak_percentage = heatmap_df
             raw_data = data
             st.write(corr_matrix, peak_percentage, raw_data)
             new_column_names = []
