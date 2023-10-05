@@ -11,7 +11,7 @@ import plotly.express as px
 import numpy as np
 from scipy.special import wofz
 from PIL import Image
-
+from openpyxl import Workbook
 
 #--------------------------------Defaults------------------------------#
 # Default data
@@ -1106,7 +1106,7 @@ def main():
         if download_button:
             # if corr_matrix and heatmap_df and data is not None:
             corr = st.session_state['corr_matrix']
-            peak_percentage = heatmap_df
+            peak_percentage = st.session_state['heatmap_df']
             raw_data = data
 
             new_column_names = {'x':'Wavenumber [cm$^-$$^1$]'}
@@ -1127,10 +1127,10 @@ def main():
             # peak_percentage[0] = new_row_names
             st.write(raw_data, peak_percentage, corr)
 
-            # with pd.ExcelWriter('FTIR_Results.xlsx', engine='xlsxwriter') as writer:
-            #     df1.to_excel(writer, sheet_name='Sheet1', index=False)
-            #     df2.to_excel(writer, sheet_name='Sheet2', index=False)
-            #     df3.to_excel(writer, sheet_name='Sheet3', index=False)
+            with pd.ExcelWriter('FTIR_Results.xlsx', engine='xlsxwriter') as writer:
+                raw_data.to_excel(writer, sheet_name='Sheet1', index=False)
+                .to_excel(writer, sheet_name='Sheet2', index=False)
+                df3.to_excel(writer, sheet_name='Sheet3', index=False)
 
 
 
