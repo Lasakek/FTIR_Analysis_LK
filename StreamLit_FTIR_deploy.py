@@ -716,23 +716,22 @@ def plot_heatmap(parameters):
     dropped = heatmap_df_edit.dropna(axis=1, how='any')
     # st.write(dropped)
 
-    start_the_heat = st.button("Calculate and Display Heatmap")
-    if start_the_heat:
-        miami = dropped.drop('Sample', axis=1)
-        for_real = round(miami.corr(),2)
-        # print(for_real)
 
-        fig = px.imshow(for_real, text_auto=True, aspect="auto")
-        fig.update_layout(width=1000, height=1000, title="Correlation Heatmap",
+    miami = dropped.drop('Sample', axis=1)
+    for_real = round(miami.corr(),2)
+    # print(for_real)
+
+    fig = px.imshow(for_real, text_auto=True, aspect="auto")
+    fig.update_layout(width=1000, height=1000, title="Correlation Heatmap",
+                      title_font=dict(size=20),
+                      xaxis=dict(title_font=dict(size=50), tickfont=dict(size=20)),
+                      yaxis=dict(title_font=dict(size=50), tickfont=dict(size=20)),
+                      legend_font=dict(size=40),
+                      coloraxis_colorbar=dict(
                           title_font=dict(size=20),
-                          xaxis=dict(title_font=dict(size=50), tickfont=dict(size=20)),
-                          yaxis=dict(title_font=dict(size=50), tickfont=dict(size=20)),
-                          legend_font=dict(size=40),
-                          coloraxis_colorbar=dict(
-                              title_font=dict(size=20),
-                              tickfont=dict(size=20)))
+                          tickfont=dict(size=20)))
 
-        st.plotly_chart(fig)
+    st.plotly_chart(fig)
     return for_real
 
 
@@ -1094,7 +1093,10 @@ def main():
             if st.session_state['heat_bool'] == True:
                 # Add 10 empty columns using a list comprehension
                 if 'heatmap_df' in st.session_state:
-                    corr_matrix = plot_heatmap(parameters)
+                    start_the_heat = st.button("Calculate and Display Heatmap")
+                    if start_the_heat:
+                        corr_matrix = plot_heatmap(parameters)
+
 
             else:
                 st.warning("The Heatmap is based on the Peak Deconvolution Values, so please do this first. :fox_face:")
