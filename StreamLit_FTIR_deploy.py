@@ -1127,10 +1127,10 @@ def main():
             # peak_percentage[0] = new_row_names
             st.write(raw_data, peak_percentage, corr)
 
-            with pd.ExcelWriter('FTIR_Results.xlsx', engine='xlsxwriter') as writer:
-                raw_data.to_excel(writer, sheet_name='Sheet1', index=False)
-                .to_excel(writer, sheet_name='Sheet2', index=False)
-                df3.to_excel(writer, sheet_name='Sheet3', index=False)
+            # with pd.ExcelWriter('FTIR_Results.xlsx', engine='xlsxwriter') as writer:
+            #     raw_data.to_excel(writer, sheet_name='Sheet1', index=False)
+            #     peak_percentage.to_excel(writer, sheet_name='Sheet2', index=False)
+            #     corr.to_excel(writer, sheet_name='Sheet3', index=False)
 
 
 
