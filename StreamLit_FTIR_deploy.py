@@ -1135,7 +1135,7 @@ def main():
             raw_data.rename(columns=new_column_names, inplace=True)
             # st.write(peak_percentage)
             # st.write(type(peak_pe rcentage))
-            peak_percentage[0] = new_row_names
+            peak_percentage['Sample'] = new_row_names
             st.write(raw_data, peak_percentage, corr)
             output = BytesIO()
 
