@@ -1135,7 +1135,7 @@ def main():
             # st.write(peak_percentage)
             # st.write(type(peak_pe rcentage))
             peak_percentage[0] = new_row_names
-            # st.write(raw_data, peak_percentage, corr)
+            st.write(raw_data, peak_percentage, corr)
             output = BytesIO()
             with pd.ExcelWriter('FTIR_Results.xlsx', engine='xlsxwriter') as writer:
                 raw_data.to_excel(writer, sheet_name='Raw_Data', index=False)
