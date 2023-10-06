@@ -1139,13 +1139,14 @@ def main():
             st.write(raw_data, peak_percentage, corr)
             output = BytesIO()
 
-            # Write files to in-memory strings using BytesIO and xlsxwriter
-            # See: https://xlsxwriter.readthedocs.io/workbook.html?highlight=BytesIO#constructor
-            with xlsxwriter.Workbook(output, {'in_memory': True}) as workbook:
-                with pd.ExcelWriter(workbook, engine='xlsxwriter') as writer:
-                    raw_data.to_excel(writer, sheet_name='Raw_Data', index=False)
-                    peak_percentage.to_excel(writer, sheet_name='Peak_Percentages', index=False)
-                    corr.to_excel(writer, sheet_name='Correlation_Matrix', index=False)
+            # Create a Pandas ExcelWriter and a Workbook from xlsxwriter
+            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+                workbook = writer.book
+
+                # Write your dataframes to the ExcelWriter
+                raw_data.to_excel(writer, sheet_name='Raw_Data', index=False)
+                peak_percentage.to_excel(writer, sheet_name='Peak_Percentages', index=False)
+                corr.to_excel(writer, sheet_name='Correlation_Matrix', index=False)
 
             # Reset the position to the beginning of the stream
             output.seek(0)
