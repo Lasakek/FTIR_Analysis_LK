@@ -12,6 +12,7 @@ import numpy as np
 from scipy.special import wofz
 from PIL import Image
 from io import BytesIO
+import xlsxwriter
 from xlsxwriter import Workbook
 
 #--------------------------------Defaults------------------------------#
@@ -1137,21 +1138,26 @@ def main():
             peak_percentage[0] = new_row_names
             st.write(raw_data, peak_percentage, corr)
             output = BytesIO()
-            with pd.ExcelWriter('FTIR_Results.xlsx', engine='xlsxwriter') as writer:
-                raw_data.to_excel(writer, sheet_name='Raw_Data', index=False)
-                peak_percentage.to_excel(writer, sheet_name='Peak_Percentages', index=False)
-                corr.to_excel(writer, sheet_name='Correlation_Matrix', index=False)
+
+            # Write files to in-memory strings using BytesIO and xlsxwriter
+            # See: https://xlsxwriter.readthedocs.io/workbook.html?highlight=BytesIO#constructor
+            with xlsxwriter.Workbook(output, {'in_memory': True}) as workbook:
+                with pd.ExcelWriter(workbook, engine='xlsxwriter') as writer:
+                    raw_data.to_excel(writer, sheet_name='Raw_Data', index=False)
+                    peak_percentage.to_excel(writer, sheet_name='Peak_Percentages', index=False)
+                    corr.to_excel(writer, sheet_name='Correlation_Matrix', index=False)
+
+            # Reset the position to the beginning of the stream
             output.seek(0)
-            st.download_button('Please confirm', data=output, file_name='Results.xlsx', key='download_button')
 
-
-
-
-
-
-
-
-
+            # Create the download button
+            st.download_button(
+                label="Please confirm",
+                data=output.getvalue(),
+                file_name="Results.xlsx",
+                mime="application/vnd.ms-excel",
+                key="download_button"
+            )
 
 
 
