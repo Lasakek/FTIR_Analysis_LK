@@ -16,7 +16,6 @@ from xlsxwriter import Workbook
 
 #--------------------------------Defaults------------------------------#
 # Default data
-data_editor_key = 1
 
 
 #---------Class for storing/handling Sample Information-----#
