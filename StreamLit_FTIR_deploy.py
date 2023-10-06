@@ -1104,12 +1104,12 @@ def main():
 
         download_button = st.button("Download Results as Excel File")
         if download_button:
-            if st.session_state['corr_matrix'] is not None:
+            if 'corr_matrix' in st.session_state:
                 corr = st.session_state['corr_matrix']
             else:
                 corr = []
 
-            if st.session_state['heatmap_df'] is not None:
+            if 'heatmap_df' in st.session_state:
                 peak_percentage = st.session_state['heatmap_df']
             else:
                 peak_percentage = []
@@ -1136,7 +1136,7 @@ def main():
             # st.write(peak_percentage)
             # st.write(type(peak_pe rcentage))
             peak_percentage['Sample'] = new_row_names
-            st.write(raw_data, peak_percentage, corr)
+            # st.write(raw_data, peak_percentage, corr)
             output = BytesIO()
 
             # Create a Pandas ExcelWriter and a Workbook from xlsxwriter
