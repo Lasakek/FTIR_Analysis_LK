@@ -1146,7 +1146,7 @@ def main():
                 # Write your dataframes to the ExcelWriter
                 raw_data.to_excel(writer, sheet_name='Raw_Data', index=False)
                 peak_percentage.to_excel(writer, sheet_name='Peak_Percentages', index=False)
-                corr.to_excel(writer, sheet_name='Correlation_Matrix', index=False)
+                corr.to_excel(writer, sheet_name='Correlation_Matrix', index=True)
 
             # Reset the position to the beginning of the stream
             output.seek(0)
