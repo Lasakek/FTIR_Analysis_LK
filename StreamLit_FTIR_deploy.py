@@ -12,7 +12,7 @@ import numpy as np
 from scipy.special import wofz
 from PIL import Image
 from io import BytesIO
-from openpyxl import Workbook
+
 
 #--------------------------------Defaults------------------------------#
 # Default data
@@ -1104,39 +1104,47 @@ def main():
 
         download_button = st.button("Download Results as Excel File")
         if download_button:
-            try:
+            if st.session_state['corr_matrix'] is not None:
                 corr = st.session_state['corr_matrix']
+            else:
+                corr = []
+
+            if st.session_state['heatmap_df'] is not None:
                 peak_percentage = st.session_state['heatmap_df']
+            else:
+                peak_percentage = []
+
+            if data is not None:
                 raw_data = data
+            else:
+                raw_data = []
 
-                new_column_names = {'x':'Wavenumber [cm$^-$$^1$]'}
-                new_row_names = []
 
-                for sample in selected_samples:
-                    index = int(sample[7:])
-                    sample_object = sample_objects[index]
-                    file_name = sample_object.give_file_name()
-                    # item = {sample: file_name}
-                    # st.write(item)
-                    new_column_names[sample] = file_name
+            new_column_names = {'x':'Wavenumber [cm$^-$$^1$]'}
+            new_row_names = []
 
-                    new_row_names.append(file_name)
-                raw_data.rename(columns=new_column_names, inplace=True)
-                # st.write(peak_percentage)
-                # st.write(type(peak_pe rcentage))
-                peak_percentage[0] = new_row_names
-                # st.write(raw_data, peak_percentage, corr)
-                output = BytesIO()
-                with pd.ExcelWriter('FTIR_Results.xlsx', engine='xlsxwriter') as writer:
-                    raw_data.to_excel(writer, sheet_name='Sheet1', index=False)
-                    peak_percentage.to_excel(writer, sheet_name='Sheet2', index=False)
-                    corr.to_excel(writer, sheet_name='Sheet3', index=False)
-                output.seek(0)
-                st.download_button('Please confirm', data=output, file_name='Results.xlsx', key='download_button')
-            except Exception as e:
-                st.write(e)
-                # st.warning("Fuck")
-            #
+            for sample in selected_samples:
+                index = int(sample[7:])
+                sample_object = sample_objects[index]
+                file_name = sample_object.give_file_name()
+                # item = {sample: file_name}
+                # st.write(item)
+                new_column_names[sample] = file_name
+
+                new_row_names.append(file_name)
+            raw_data.rename(columns=new_column_names, inplace=True)
+            # st.write(peak_percentage)
+            # st.write(type(peak_pe rcentage))
+            peak_percentage[0] = new_row_names
+            # st.write(raw_data, peak_percentage, corr)
+            output = BytesIO()
+            with pd.ExcelWriter('FTIR_Results.xlsx', engine='xlsxwriter') as writer:
+                raw_data.to_excel(writer, sheet_name='Raw_Data', index=False)
+                peak_percentage.to_excel(writer, sheet_name='Peak_Percentages', index=False)
+                corr.to_excel(writer, sheet_name='Correlation_Matrix', index=False)
+            output.seek(0)
+            st.download_button('Please confirm', data=output, file_name='Results.xlsx', key='download_button')
+
 
 
 
