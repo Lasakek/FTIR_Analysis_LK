@@ -13,7 +13,7 @@ from scipy.special import wofz
 from PIL import Image
 from io import BytesIO
 import xlsxwriter
-#
+
 #--------------------------------Defaults------------------------------#
 # Default data
 data_editor_key = 1
