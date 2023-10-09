@@ -1108,17 +1108,17 @@ def main():
             if 'corr_matrix' in st.session_state:
                 corr = st.session_state['corr_matrix']
             else:
-                corr = pd.DataFrame
+                corr = pd.DataFrame()
 
             if 'heatmap_df' in st.session_state:
                 peak_percentage = st.session_state['heatmap_df']
             else:
-                peak_percentage = pd.DataFrame
+                peak_percentage = pd.DataFrame()
 
             if 'data' in st.session_state:
                 raw_data = data
             else:
-                raw_data = pd.DataFrame
+                raw_data = pd.DataFrame()
 
 
             new_column_names = {'x':'Wavenumber [cm$^-$$^1$]'}
