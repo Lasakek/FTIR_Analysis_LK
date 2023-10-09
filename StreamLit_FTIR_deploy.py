@@ -1133,6 +1133,7 @@ def main():
                 new_column_names[sample] = file_name
 
                 new_row_names.append(file_name)
+            st.write(new_column_names)
             raw_data.rename(columns=new_column_names, inplace=True)
             # st.write(peak_percentage)
             # st.write(type(peak_pe rcentage))
