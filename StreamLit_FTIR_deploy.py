@@ -1077,20 +1077,22 @@ def main():
             if st.session_state['heat_bool'] == True:
                 # Add 10 empty columns using a list comprehension
                 if 'heatmap_df' in st.session_state:
+
+                    state_df = st.session_state['heatmap_df']
+
+                    param_add = st.text_input('Additional Parameters - Parameters are seperated by commas (,)',
+                                              'Param1, Param2, Param3')
+                    empty_columns = param_add.split(', ')
+                    heatmap_df = pd.concat([state_df, pd.DataFrame(columns=empty_columns)], axis=1)
+                    st.markdown(
+                        "*Enter the specific Parameter Values for each Sample. A column must be filled out completely to be plotted.*")
+                    heatmap_df_edit = st.data_editor(heatmap_df, num_rows='dynamic', disabled=parameters)
+                    dropped = heatmap_df_edit.dropna(axis=1, how='any')
+
                     start_the_heat = st.button("Calculate and Display Heatmap")
+
+
                     if start_the_heat:
-
-                        state_df = st.session_state['heatmap_df']
-
-                        param_add = st.text_input('Additional Parameters - Parameters are seperated by commas (,)',
-                                                  'Param1, Param2, Param3')
-                        empty_columns = param_add.split(', ')
-                        heatmap_df = pd.concat([state_df, pd.DataFrame(columns=empty_columns)], axis=1)
-                        st.markdown(
-                            "*Enter the specific Parameter Values for each Sample. A column must be filled out completely to be plotted.*")
-                        heatmap_df_edit = st.data_editor(heatmap_df, num_rows='dynamic', disabled=parameters)
-                        dropped = heatmap_df_edit.dropna(axis=1, how='any')
-
                         corr_matrix = plot_heatmap(dropped)
                         st.session_state['corr_matrix'] = corr_matrix
 
