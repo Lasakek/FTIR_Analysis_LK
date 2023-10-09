@@ -1128,17 +1128,15 @@ def main():
                 index = int(sample[7:])
                 sample_object = sample_objects[index]
                 file_name = sample_object.give_file_name()
-                # item = {sample: file_name}
-                # st.write(item)
+
                 new_column_names[sample] = file_name
 
                 new_row_names.append(file_name)
-            st.write(new_column_names)
+
             raw_data.rename(columns=new_column_names, inplace=True)
-            # st.write(peak_percentage)
-            # st.write(type(peak_pe rcentage))
+
             peak_percentage['Sample'] = new_row_names
-            # st.write(raw_data, peak_percentage, corr)
+
             output = BytesIO()
 
             # Create a Pandas ExcelWriter and a Workbook from xlsxwriter
