@@ -423,6 +423,7 @@ def peak_fit_lev(data, initial_guess, selected_samples):
 
         result = least_squares(objective_lev, initial_params_lev, bounds=bounds, method="dogbox", gtol=1e-5, xtol=1e-5, ftol=1e-5)
 
+
         # Extract optimized parameters
         optimized_params = result.x
         parameter_result[sample] = optimized_params
