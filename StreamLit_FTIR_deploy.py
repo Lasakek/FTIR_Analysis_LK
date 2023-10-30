@@ -1066,6 +1066,7 @@ def main():
 
 
         st.title('Correlation Heatmap  	:hot_face: :cold_face:')
+        st.divider()
 
 
         if 'heat_bool' not in st.session_state:
@@ -1078,8 +1079,8 @@ def main():
                 if 'heatmap_df' in st.session_state:
 
                     state_df = st.session_state['heatmap_df']
-
-                    param_add = st.text_input('Additional Parameters - Parameters are seperated by commas (,)',
+                    st.subheader('Enter further sample parameters to see correleations to the fitting results')
+                    param_add = st.text_input('Parameters are seperated by commas',
                                               'Param1, Param2, Param3')
                     empty_columns = param_add.split(', ')
                     heatmap_df = pd.concat([state_df, pd.DataFrame(columns=empty_columns)], axis=1)
