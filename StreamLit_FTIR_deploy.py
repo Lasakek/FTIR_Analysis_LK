@@ -1104,7 +1104,7 @@ def main():
                     heatmap_df = pd.concat([state_df, pd.DataFrame(columns=empty_columns)], axis=1)
                     st.markdown(
                         "*Enter the specific Parameter Values for each Sample. A column must be filled out completely to be plotted.*")
-                    heatmap_df_edit = st.data_editor(heatmap_df, num_rows='dynamic', disabled=parameters)
+                    heatmap_df_edit = st.data_editor(heatmap_df, num_rows='dynamic', disabled=parameters_lev)
                     dropped = heatmap_df_edit.dropna(axis=1, how='any')
 
                     start_the_heat = st.button("Calculate and Display Heatmap")
