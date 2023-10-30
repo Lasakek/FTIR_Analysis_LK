@@ -803,7 +803,7 @@ def main():
     heatmap_df = []
 
     #----------Plotting in different Tabs--------------------#
-    tab0, tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["\u2001 \u2001\u2001 Mainpage \u2001 \u2001 \u2001 ", "Plot Raw Data", "\u2001PCA\u2001", "Peak Identification", "Peak Deconvolution", "Correlation Heatmap", "Downloading Results"])
+    tab0, tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["\u2001 \u2001\u2001 Mainpage \u2001 \u2001 \u2001 ", "Plot Raw Data", "\u2001PCA\u2001", "Peak Identification", "Peak Fitting", "Correlation Heatmap", "Downloading Results"])
 
     with tab0:
         # Set the title and brief overview of the topic
@@ -960,40 +960,40 @@ def main():
 
     with tab4:
 
-        st.header("Peak Deconvolution")
-        st.markdown('Fitting Peaks to a strongly overlapping composite function can be achieved by different approaches. Two different algorithms and minimization function are being used here. The first method uses an objective function to minimize the least squares between predicted and original data by a Trust-Region-Reflective (trf) algorithm. The objective function of the second approach is to minimize the RMSE between original and predicted data, based on the L-BFGS-B algorithm. Try out both.')
+        st.header("Peak Fitting")
+        # st.markdown('Fitting Peaks to a strongly overlapping composite function can be achieved by different approaches. Two different algorithms and minimization function are being used here. The first method uses an objective function to minimize the least squares between predicted and original data by a Trust-Region-Reflective (trf) algorithm. The objective function of the second approach is to minimize the RMSE between original and predicted data, based on the L-BFGS-B algorithm. Try out both.')
 
         st.divider()
         st.subheader('You can adjust the Initial Parameter Guesses and Number of Peaks. :hatching_chick:')
         st.write("\n\n\n\n")
-        cola1, cola2 = st.columns(2)
+        # cola1, cola2 = st.columns(2)
 
-        with cola1:
-            st.markdown('**Least Squares Fitting Parameters**')
-            default_data_lev = {
-                'peak': ['β-Sheet', 'α-Helix', 'β-Turn', 'β-Sheet_2'],
-                'mu': [1623, 1652, 1670, 1683],
-                'A': [0.6, 0.2, 0.1, 0.1],
-                'sigma': [10, 6, 4, 4]
-            }
-            df_lev = pd.DataFrame(default_data_lev)
+        # with cola1:
+        st.markdown('**Least Squares Fitting Parameters**')
+        default_data_lev = {
+            'peak': ['β-Sheet', 'α-Helix', 'β-Turn', 'β-Sheet_2'],
+            'mu': [1623, 1652, 1670, 1683],
+            'A': [0.6, 0.2, 0.1, 0.1],
+            'sigma': [10, 6, 4, 4]
+        }
+        df_lev = pd.DataFrame(default_data_lev)
 
-            initial_guess_lev = st.data_editor(df_lev, num_rows='dynamic', hide_index=True)
-            parameters_lev = ["Sample"] + initial_guess_lev['peak'].tolist()
+        initial_guess_lev = st.data_editor(df_lev, num_rows='dynamic', hide_index=True)
+        parameters_lev = ["Sample"] + initial_guess_lev['peak'].tolist()
 
-        with cola2:
-            st.markdown('**RMSE Fitting Parameters**')
-            default_data = {
-                'peak': ['β-Sheet', 'α-Helix', 'β-Turn', 'β-Sheet_2'],
-                'center': [1623, 1652, 1670, 1683],
-                'amplitude': [20, 8, 6, 6],
-                'alpha': [6, 4, 4, 4],
-                'gamma': [6, 4, 4, 4]
-            }
-            df = pd.DataFrame(default_data)
-
-            initial_guess = st.data_editor(df, num_rows='dynamic', hide_index=True)
-            parameters = ["Sample"] + initial_guess['peak'].tolist()
+        # with cola2:
+            # st.markdown('**RMSE Fitting Parameters**')
+            # default_data = {
+            #     'peak': ['β-Sheet', 'α-Helix', 'β-Turn', 'β-Sheet_2'],
+            #     'center': [1623, 1652, 1670, 1683],
+            #     'amplitude': [20, 8, 6, 6],
+            #     'alpha': [6, 4, 4, 4],
+            #     'gamma': [6, 4, 4, 4]
+            # }
+            # df = pd.DataFrame(default_data)
+            #
+            # initial_guess = st.data_editor(df, num_rows='dynamic', hide_index=True)
+            # parameters = ["Sample"] + initial_guess['peak'].tolist()
 
 
 
