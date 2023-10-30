@@ -391,8 +391,8 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
 
 
     # Combine all bounds into a single list
-    upper_bounds = [center + 10 for center in mu] + [np.inf] * len(mu) + [np.inf] * len(mu)
-    lower_bounds = [center - 10 for center in mu] + [0] * len(mu) + [0] * len(mu)
+    upper_bounds = [center + 100 for center in mu] + [np.inf] * len(mu) + [np.inf] * len(mu)
+    lower_bounds = [center - 100 for center in mu] + [0] * len(mu) + [0] * len(mu)
     bounds = Bounds(lower_bounds, upper_bounds)
 
 
