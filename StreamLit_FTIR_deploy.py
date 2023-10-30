@@ -1080,7 +1080,7 @@ def main():
 
                     state_df = st.session_state['heatmap_df']
                     st.subheader('Enter further sample parameters to see correleations to the fitting results')
-                    param_add = st.text_input('Parameters are seperated by commas',
+                    param_add = st.text_input('Parameters are seperated by commas. Press Enter to submit.',
                                               'Param1, Param2, Param3')
                     empty_columns = param_add.split(', ')
                     heatmap_df = pd.concat([state_df, pd.DataFrame(columns=empty_columns)], axis=1)
