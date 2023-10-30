@@ -383,8 +383,8 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
     initial_guess = initial_guess.dropna()
 
     # getting fitting parameters from the initial guesses from the input
-    mu = initial_guess['mu']
-    A = initial_guess['A']
+    mu = initial_guess['center']
+    A = initial_guess['amplitude']
     sigma = initial_guess['sigma']
 
     initial_params_lev = np.concatenate((mu, A, sigma))
@@ -707,10 +707,8 @@ def plot_peak_areas(x_data, y_raw, params, initial_guess, sample):
 
 
 def residual_err(x, y, params, sample, algorithm):
-    if algorithm:
-        y_fit = composite_function(x,params)
-    else:
-        y_fit = composite_function_lev(x, params)
+
+    y_fit = composite_function_lev(x, params)
 
     residual = y-y_fit
     res = pd.DataFrame()
@@ -966,36 +964,19 @@ def main():
         st.divider()
         st.subheader('You can adjust the Initial Parameter Guesses and Number of Peaks. :hatching_chick:')
         st.write("\n\n\n\n")
-        # cola1, cola2 = st.columns(2)
 
-        # with cola1:
-        st.markdown('**Least Squares Fitting Parameters**')
+        # Parameters for Gauss function
+        st.markdown('**Fitting Parameters, Gaussian Curve**')
         default_data_lev = {
             'peak': ['β-Sheet', 'α-Helix', 'β-Turn', 'β-Sheet_2'],
-            'mu': [1623, 1652, 1670, 1683],
-            'A': [0.6, 0.2, 0.1, 0.1],
+            'center': [1623, 1652, 1670, 1683],
+            'amplitude': [0.6, 0.2, 0.1, 0.1],
             'sigma': [10, 6, 4, 4]
         }
         df_lev = pd.DataFrame(default_data_lev)
 
         initial_guess_lev = st.data_editor(df_lev, num_rows='dynamic', hide_index=True)
         parameters_lev = ["Sample"] + initial_guess_lev['peak'].tolist()
-
-        # with cola2:
-            # st.markdown('**RMSE Fitting Parameters**')
-            # default_data = {
-            #     'peak': ['β-Sheet', 'α-Helix', 'β-Turn', 'β-Sheet_2'],
-            #     'center': [1623, 1652, 1670, 1683],
-            #     'amplitude': [20, 8, 6, 6],
-            #     'alpha': [6, 4, 4, 4],
-            #     'gamma': [6, 4, 4, 4]
-            # }
-            # df = pd.DataFrame(default_data)
-            #
-            # initial_guess = st.data_editor(df, num_rows='dynamic', hide_index=True)
-            # parameters = ["Sample"] + initial_guess['peak'].tolist()
-
-
 
 
         if not select_samples:
