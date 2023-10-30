@@ -587,7 +587,7 @@ def peak_fit(data, initial_guess, selected_samples):
             return fit_quality
 
         # # Perform optimization
-        result = minimize(objective, initial_params, bounds=bounds, method="L-BFGS",
+        result = minimize(objective, initial_params, bounds=bounds, method="L-BFGS-B",
                           options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
 
 
