@@ -377,7 +377,7 @@ def composite_function_lev(x, params):
 
 
 
-def peak_fit_lev(data, initial_guess, selected_samples):
+def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
 
     # drop empty rows in initial guesses
     initial_guess = initial_guess.dropna()
@@ -421,7 +421,24 @@ def peak_fit_lev(data, initial_guess, selected_samples):
         initial_params_lev = np.array(initial_params_lev)
         # st.write(type(initial_params_lev[0]))
 
-        result = least_squares(objective_lev, initial_params_lev, bounds=bounds, method="trf", gtol=1e-5, xtol=1e-5, ftol=1e-5)
+        if algorithm:
+
+            def objective(params):
+                y_fitted = composite_function_lev(x_data, params)
+                # y_fitted_2 = savgol_filter(y_fitted,window_length=15, polyorder=4, deriv=2)
+                fit_quality = np.sqrt(np.mean((y_fitted - y_data) ** 2))
+                # fit_quality_2 = np.sqrt(np.mean((np.array(minmax_scale(y_fitted_2)) - np.array(minmax_scale(Y_2)))**2))
+                return fit_quality
+
+            # Optimization settings
+            max_iterations = 100000000
+            convergence_tolerance = 1e-10
+
+            # # Perform optimization
+            result = minimize(objective, initial_params_lev, bounds=bounds, method="L-BFGS-B",
+                              options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
+        else:
+            result = least_squares(objective_lev, initial_params_lev, bounds=bounds, method="trf", gtol=1e-5, xtol=1e-5, ftol=1e-5)
 
 
         # Extract optimized parameters
@@ -994,74 +1011,74 @@ def main():
                 start_decon = st.button("Press to Start Deconvolution")
                 if start_decon:
 
-                    if algorithm:
-                        # defining the columns of the heatmap_df for future use
-                        heatmap_df = pd.DataFrame(columns=parameters).dropna(axis=1, how='any')
-                        optimized_parameters = peak_fit(data, initial_guess, selected_samples)
+                    # if algorithm:
+                    #     # defining the columns of the heatmap_df for future use
+                    #     heatmap_df = pd.DataFrame(columns=parameters).dropna(axis=1, how='any')
+                    #     optimized_parameters = peak_fit(data, initial_guess, selected_samples)
+                    #
+                    #     # st.write(optimized_parameters)
+                    #
+                    #     col1, col2, col3 = st.columns(3)
+                    #
+                    #     for sample in selected_samples:
+                    #
+                    #         with col1:
+                    #
+                    #             sample_color = plot_fitted_spec(data['x'], data[sample], optimized_parameters[sample], initial_guess, sample)
+                    #
+                    #         with col2:
+                    #             peak_percentage = plot_peak_areas(data['x'], data[sample], optimized_parameters[sample], initial_guess, sample)
+                    #             heatmap_row = [sample] + peak_percentage
+                    #             heatmap_df.loc[len(heatmap_df)] = heatmap_row
+                    #             if 'heatmap_df' not in st.session_state:
+                    #                 st.session_state['heatmap_df'] = heatmap_df
+                    #             else:
+                    #                 st.session_state['heatmap_df'] = heatmap_df
+                    #
+                    #         with col3:
+                    #             residual_err(data['x'], data[sample], optimized_parameters[sample], sample, algorithm)
+                    #
+                    #
+                    #     # heat_bool = True
+                    #     if 'heat_bool' not in st.session_state:
+                    #         st.session_state['heat_bool'] = True
+                    #     else:
+                    #         st.session_state['heat_bool'] = True
+                    # else:
+                    # defining the columns of the heatmap_df for future use
+                    heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
+                    optimized_parameters_lev = peak_fit_lev(data, initial_guess_lev, selected_samples, algorithm)
 
-                        # st.write(optimized_parameters)
 
-                        col1, col2, col3 = st.columns(3)
+                    col1, col2, col3 = st.columns(3)
 
-                        for sample in selected_samples:
+                    for sample in selected_samples:
 
-                            with col1:
+                        with col1:
 
-                                sample_color = plot_fitted_spec(data['x'], data[sample], optimized_parameters[sample], initial_guess, sample)
+                            sample_color = plot_fitted_spec_lev(data['x'], data[sample], optimized_parameters_lev[sample],
+                                                            initial_guess_lev, sample)
 
-                            with col2:
-                                peak_percentage = plot_peak_areas(data['x'], data[sample], optimized_parameters[sample], initial_guess, sample)
-                                heatmap_row = [sample] + peak_percentage
-                                heatmap_df.loc[len(heatmap_df)] = heatmap_row
-                                if 'heatmap_df' not in st.session_state:
-                                    st.session_state['heatmap_df'] = heatmap_df
-                                else:
-                                    st.session_state['heatmap_df'] = heatmap_df
+                        with col2:
+                            peak_percentage = plot_peak_areas_lev(data['x'], data[sample], optimized_parameters_lev[sample],
+                                                              initial_guess_lev, sample)
+                            heatmap_row = [sample] + peak_percentage
+                            heatmap_df.loc[len(heatmap_df)] = heatmap_row
+                            if 'heatmap_df' not in st.session_state:
+                                st.session_state['heatmap_df'] = heatmap_df
+                            else:
+                                st.session_state['heatmap_df'] = heatmap_df
 
-                            with col3:
-                                residual_err(data['x'], data[sample], optimized_parameters[sample], sample, algorithm)
+                        with col3:
+
+                            residual_err(data['x'], data[sample], optimized_parameters_lev[sample], sample, algorithm)
 
 
-                        # heat_bool = True
-                        if 'heat_bool' not in st.session_state:
-                            st.session_state['heat_bool'] = True
-                        else:
-                            st.session_state['heat_bool'] = True
+                    # heat_bool = True
+                    if 'heat_bool' not in st.session_state:
+                        st.session_state['heat_bool'] = True
                     else:
-                        # defining the columns of the heatmap_df for future use
-                        heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
-                        optimized_parameters_lev = peak_fit_lev(data, initial_guess_lev, selected_samples)
-
-
-                        col1, col2, col3 = st.columns(3)
-
-                        for sample in selected_samples:
-
-                            with col1:
-
-                                sample_color = plot_fitted_spec_lev(data['x'], data[sample], optimized_parameters_lev[sample],
-                                                                initial_guess_lev, sample)
-
-                            with col2:
-                                peak_percentage = plot_peak_areas_lev(data['x'], data[sample], optimized_parameters_lev[sample],
-                                                                  initial_guess_lev, sample)
-                                heatmap_row = [sample] + peak_percentage
-                                heatmap_df.loc[len(heatmap_df)] = heatmap_row
-                                if 'heatmap_df' not in st.session_state:
-                                    st.session_state['heatmap_df'] = heatmap_df
-                                else:
-                                    st.session_state['heatmap_df'] = heatmap_df
-
-                            with col3:
-
-                                residual_err(data['x'], data[sample], optimized_parameters_lev[sample], sample, algorithm)
-
-
-                        # heat_bool = True
-                        if 'heat_bool' not in st.session_state:
-                            st.session_state['heat_bool'] = True
-                        else:
-                            st.session_state['heat_bool'] = True
+                        st.session_state['heat_bool'] = True
 
 
     with tab5:
