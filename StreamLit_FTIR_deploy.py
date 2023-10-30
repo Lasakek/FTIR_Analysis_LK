@@ -962,11 +962,11 @@ def main():
         # st.markdown('Fitting Peaks to a strongly overlapping composite function can be achieved by different approaches. Two different algorithms and minimization function are being used here. The first method uses an objective function to minimize the least squares between predicted and original data by a Trust-Region-Reflective (trf) algorithm. The objective function of the second approach is to minimize the RMSE between original and predicted data, based on the L-BFGS-B algorithm. Try out both.')
 
         st.divider()
-        st.subheader('You can adjust the Initial Parameter Guesses and Number of Peaks. :hatching_chick:')
+        st.subheader('Adjust initial guesses of the Gauss-Curve parameters. :hatching_chick:')
         st.write("\n\n\n\n")
 
         # Parameters for Gauss function
-        st.markdown('**Fitting Parameters, Gaussian Curve**')
+        st.markdown('**Fitting Parameters**')
         default_data_lev = {
             'peak': ['β-Sheet', 'α-Helix', 'β-Turn', 'β-Sheet_2'],
             'center': [1623, 1652, 1670, 1683],
@@ -1037,7 +1037,7 @@ def main():
 
                         with col1:
 
-                            sample_color = plot_fitted_spec_lev(data['x'], data[sample], optimized_parameters_lev[sample],
+                            plot_fitted_spec_lev(data['x'], data[sample], optimized_parameters_lev[sample],
                                                             initial_guess_lev, sample)
 
                         with col2:
@@ -1084,8 +1084,7 @@ def main():
                                               'Param1, Param2, Param3')
                     empty_columns = param_add.split(', ')
                     heatmap_df = pd.concat([state_df, pd.DataFrame(columns=empty_columns)], axis=1)
-                    st.markdown(
-                        "*Enter the specific Parameter Values for each Sample. A column must be filled out completely to be plotted.*")
+                    st.markdown("*Enter the specific Parameter Values for each Sample. A column must be filled out completely to be plotted.*")
                     heatmap_df_edit = st.data_editor(heatmap_df, num_rows='dynamic', disabled=parameters_lev)
                     dropped = heatmap_df_edit.dropna(axis=1, how='any')
 
