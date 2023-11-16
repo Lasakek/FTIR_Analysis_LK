@@ -118,22 +118,14 @@ def xml_to_data(uploaded_file):
             if values_tag:
                 y_values_text = values_tag.get_text()
                 try:
-                    # st.write("check")
                     y_values = [float(value) for value in y_values_text.strip().split()]
-                    st.write("this is normal shape:", y_values)
+
                 except ValueError:
                     encoded_y_values = base64.b64decode(y_values_text)
                     y_values = struct.unpack(f'{len(encoded_y_values) // struct.calcsize("f")}f', encoded_y_values)
-                    # st.write(y_values.shape)
-                    # st.write(y_values.dtype)
-                    # st.write(y_values)
 
-                    # Split the string into a list of strings
-                    # y_values = y_values.split(',')
-
-                    # Convert the list of strings to an array of integers
+                    # Convert the list into an array
                     y_values = array('f', y_values)
-                    st.write("This is new shape: ", y_values)
 
             else:
                 st.error(f"Could not find Y-values in {file}", icon="🚨")
