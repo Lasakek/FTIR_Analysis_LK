@@ -71,6 +71,7 @@ def csv_to_data(uploaded_file):
                 # Extract 'y' values (excluding the first row)
                 y_values = df.iloc[0:, 1]
                 # print(y_values)
+
             except Exception as e:
                 st.warning("Please ensure the correct structure of the .csv file: \n x-values, y-values\n x1, y1\n x2, y2")
 
