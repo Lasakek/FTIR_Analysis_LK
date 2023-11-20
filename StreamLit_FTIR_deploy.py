@@ -544,7 +544,7 @@ def plot_peak_areas_lev(x_data, y_raw, params, initial_guess, sample):
 
     # Update the figure's layout to set the width and height
     fig.update_layout(title=title, xaxis_title="Wavenumber [cm^-1]", yaxis_title="Area Percentage",
-                      title_font=dict(size=20), width= 500)
+                      title_font=dict(size=20), width= 500, yaxis=dict(range=[0, 100]))
 
     st.plotly_chart(fig)
 
