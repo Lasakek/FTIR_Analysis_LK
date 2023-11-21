@@ -404,8 +404,8 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
 
 
     # Combine all bounds into a single list
-    upper_bounds = [1642] + [1663] + [1683] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
-    lower_bounds = [1624] + [1649] + [1665] + [1674] + [0] * len(mu) + [0] * len(mu)
+    upper_bounds = [1642] + [1663] + [1642] + [1683] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
+    lower_bounds = [1624] + [1649] + [1657] + [1665] + [1674] + [0] * len(mu) + [0] * len(mu)
 
     # upper_bounds = [center + 2 for center in mu] + [np.inf] * len(mu) + [np.inf] * len(mu)
     # lower_bounds = [center - 2 for center in mu] + [0] * len(mu) + [0] * len(mu)
@@ -589,7 +589,7 @@ def peak_fit(data, initial_guess, selected_samples):
 
     # Define bounds for parameter optimization
     # center_bounds = [(center - 10, center + 10) for center in centers]
-    center_bounds = [(1624 , 1642), (1649 , 1663), (1665 , 1683), (1674 , 1695)]
+    center_bounds = [(1624 , 1642), (1649 , 1663), (1642 , 1657), (1665 , 1683), (1674 , 1695)]
     amplitude_bounds = (0.01, None)  # Allow positive amplitudes only
     alpha_bounds = (0.01, None)  # Allow positive alpha values only
     gamma_bounds = (0.01, None)  # Allow positive gamma values only
@@ -987,10 +987,10 @@ def main():
         # Parameters for Gauss function
         st.markdown('**Fitting Parameters**')
         default_data_lev = {
-            'peak': ['β-Sheet', 'α-Helix', 'β-Turn', 'β-Sheet_2'],
-            'center': [1633, 1654, 1672, 1684],
-            'amplitude': [0.6, 0.2, 0.1, 0.1],
-            'sigma': [10, 6, 4, 4]
+            'peak': ['β-Sheet', 'α-Helix', 'random-coil', 'β-Turn', 'β-Sheet_2'],
+            'center': [1633, 1654, 1654, 1672, 1684],
+            'amplitude': [0.6, 0.2, 0.1, 0.1, 0.1],
+            'sigma': [10, 6, 4, 4, 4]
         }
         df_lev = pd.DataFrame(default_data_lev)
 
