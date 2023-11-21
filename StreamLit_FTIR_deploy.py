@@ -593,9 +593,9 @@ def peak_fit(data, initial_guess, selected_samples):
     initial_params = np.concatenate((centers, amplitudes, alphas, gammas))
 
     # Define bounds for parameter optimization
-    # center_bounds = [(center - 10, center + 10) for center in centers]
+    center_bounds = [(center - 50, center + 50) for center in centers]
     # 5 secondary structures
-    center_bounds = [(1624 , 1642), (1649 , 1663), (1642 , 1657), (1665 , 1683), (1674 , 1695)]
+    # center_bounds = [(1624 , 1642), (1649 , 1663), (1642 , 1657), (1665 , 1683), (1674 , 1695)]
 
     # 4 secondary structures
     # center_bounds = [(1624 , 1642), (1649 , 1663), (1665 , 1683), (1674 , 1695)]
