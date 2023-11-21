@@ -405,15 +405,15 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
 
     # Combine all bounds into a single list
     # 5 secondary structures
-    # upper_bounds = [1642] + [1663] + [1657] + [1683] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
-    # lower_bounds = [1624] + [1649] + [1642] + [1665] + [1674] + [0] * len(mu) + [0] * len(mu)
+    upper_bounds = [1642] + [1663] + [1649] + [1683] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
+    lower_bounds = [1624] + [1649] + [1641] + [1665] + [1674] + [0] * len(mu) + [0] * len(mu)
 
     # 4 secondary structures
     # upper_bounds = [1642] + [1663] + [1683] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
     # lower_bounds = [1624] + [1649] + [1665] + [1674] + [0] * len(mu) + [0] * len(mu)
 
-    upper_bounds = [center + 50 for center in mu] + [np.inf] * len(mu) + [np.inf] * len(mu)
-    lower_bounds = [center - 50 for center in mu] + [0] * len(mu) + [0] * len(mu)
+    # upper_bounds = [center + 50 for center in mu] + [np.inf] * len(mu) + [np.inf] * len(mu)
+    # lower_bounds = [center - 50 for center in mu] + [0] * len(mu) + [0] * len(mu)
 
 
     bounds = Bounds(lower_bounds, upper_bounds)
@@ -593,9 +593,9 @@ def peak_fit(data, initial_guess, selected_samples):
     initial_params = np.concatenate((centers, amplitudes, alphas, gammas))
 
     # Define bounds for parameter optimization
-    center_bounds = [(center - 50, center + 50) for center in centers]
+    # center_bounds = [(center - 50, center + 50) for center in centers]
     # 5 secondary structures
-    # center_bounds = [(1624 , 1642), (1649 , 1663), (1642 , 1657), (1665 , 1683), (1674 , 1695)]
+    center_bounds = [(1624 , 1642), (1649 , 1663), (1641 , 1649), (1665 , 1683), (1674 , 1695)]
 
     # 4 secondary structures
     # center_bounds = [(1624 , 1642), (1649 , 1663), (1665 , 1683), (1674 , 1695)]
@@ -997,7 +997,7 @@ def main():
         st.markdown('**Fitting Parameters**')
         default_data_lev = {
             'peak': ['β-Sheet', 'α-Helix', 'random-coil', 'β-Turn', 'β-Sheet_2'],
-            'center': [1633, 1654, 1654, 1672, 1684],
+            'center': [1633, 1654, 1645, 1672, 1684],
             'amplitude': [0.6, 0.2, 0.1, 0.1, 0.1],
             'sigma': [10, 6, 4, 4, 4]
         }
