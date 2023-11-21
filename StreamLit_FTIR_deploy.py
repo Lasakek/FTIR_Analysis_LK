@@ -405,15 +405,15 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
 
     # Combine all bounds into a single list
     # 5 secondary structures
-    upper_bounds = [1642] + [1663] + [1657] + [1683] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
-    lower_bounds = [1624] + [1649] + [1642] + [1665] + [1674] + [0] * len(mu) + [0] * len(mu)
+    # upper_bounds = [1642] + [1663] + [1657] + [1683] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
+    # lower_bounds = [1624] + [1649] + [1642] + [1665] + [1674] + [0] * len(mu) + [0] * len(mu)
 
     # 4 secondary structures
     # upper_bounds = [1642] + [1663] + [1683] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
     # lower_bounds = [1624] + [1649] + [1665] + [1674] + [0] * len(mu) + [0] * len(mu)
 
-    # upper_bounds = [center + 2 for center in mu] + [np.inf] * len(mu) + [np.inf] * len(mu)
-    # lower_bounds = [center - 2 for center in mu] + [0] * len(mu) + [0] * len(mu)
+    upper_bounds = [center + 50 for center in mu] + [np.inf] * len(mu) + [np.inf] * len(mu)
+    lower_bounds = [center - 50 for center in mu] + [0] * len(mu) + [0] * len(mu)
 
 
     bounds = Bounds(lower_bounds, upper_bounds)
