@@ -588,7 +588,8 @@ def peak_fit(data, initial_guess, selected_samples):
     initial_params = np.concatenate((centers, amplitudes, alphas, gammas))
 
     # Define bounds for parameter optimization
-    center_bounds = [(center - 10, center + 10) for center in centers]
+    # center_bounds = [(center - 10, center + 10) for center in centers]
+    center_bounds = [(1624 , 1642), (1649 , 1663), (1665 , 1683), (1674 , 1695)]
     amplitude_bounds = (0.01, None)  # Allow positive amplitudes only
     alpha_bounds = (0.01, None)  # Allow positive alpha values only
     gamma_bounds = (0.01, None)  # Allow positive gamma values only
@@ -987,7 +988,7 @@ def main():
         st.markdown('**Fitting Parameters**')
         default_data_lev = {
             'peak': ['β-Sheet', 'α-Helix', 'β-Turn', 'β-Sheet_2'],
-            'center': [1623, 1652, 1670, 1683],
+            'center': [1633, 1654, 1672, 1684],
             'amplitude': [0.6, 0.2, 0.1, 0.1],
             'sigma': [10, 6, 4, 4]
         }
