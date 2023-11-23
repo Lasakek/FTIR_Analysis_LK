@@ -990,7 +990,7 @@ def main():
         # st.markdown('Fitting Peaks to a strongly overlapping composite function can be achieved by different approaches. Two different algorithms and minimization function are being used here. The first method uses an objective function to minimize the least squares between predicted and original data by a Trust-Region-Reflective (trf) algorithm. The objective function of the second approach is to minimize the RMSE between original and predicted data, based on the L-BFGS-B algorithm. Try out both.')
 
         st.divider()
-        st.subheader('Adjust initial guesses of the Gauss-Curve parameters. :hatching_chick:')
+        st.subheader('Adjust initial guesses of the Gauss-Curve parameters, if needed. :hatching_chick:')
         st.write("\n\n\n\n")
 
         # Parameters for Gauss function
