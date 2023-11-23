@@ -773,7 +773,7 @@ def main():
     # Define content for the Analysis Page (you can create another tab for analysis)
 
     #-----------------all of the Sidebar Input--------------------------#
-    st.sidebar.header("Upload your .xml Files here:")
+    st.sidebar.header("Upload your FTIR Files here:")
 
 
 
