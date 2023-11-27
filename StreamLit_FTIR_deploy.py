@@ -405,8 +405,11 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
 
     # Combine all bounds into a single list
     # 5 secondary structures
-    upper_bounds = [1641] + [1657] + [1657] + [1686] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
-    lower_bounds = [1623] + [1642] + [1648] + [1662] + [1674] + [0] * len(mu) + [0] * len(mu)
+    # upper_bounds = [1641] + [1657] + [1657] + [1686] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
+    # lower_bounds = [1623] + [1642] + [1648] + [1662] + [1674] + [0] * len(mu) + [0] * len(mu)
+
+    upper_bounds = [1640] + [1648] + [1660] + [1670] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
+    lower_bounds = [1625] + [1640] + [1648] + [1660] + [1675] + [0] * len(mu) + [0] * len(mu)
 
     # 4 secondary structures
     # upper_bounds = [1642] + [1663] + [1683] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
@@ -559,184 +562,6 @@ def plot_peak_areas_lev(x_data, y_raw, params, initial_guess, sample):
     return peak_percentages
 
 
-
-
-#-------------NELDER-MEAD--------------------------#
-# Define the Voigt function
-# def V(x, center, amplitude, alpha, gamma):
-#     sigma = alpha / np.sqrt(2 * np.log(2))
-#     return np.real(wofz((x - center + 1j * gamma) / (sigma * np.sqrt(2)))) / sigma / np.sqrt(2 * np.pi) * amplitude
-#
-#
-#
-# # Define the composite function
-# def composite_function(x, params):
-#     num_peaks = len(params) // 4
-#     total = np.zeros_like(x)
-#     for i in range(num_peaks):
-#         center = params[i]
-#         amplitude = params[num_peaks + i]
-#         alpha = params[num_peaks * 2 + i]
-#         gamma = params[num_peaks * 3 + i]
-#         total += V(x, center, amplitude, alpha, gamma)
-#     return total
-#
-# def peak_fit(data, initial_guess, selected_samples):
-#
-#     #drop empty rows in initial guesses
-#     initial_guess = initial_guess.dropna()
-#     # print("This is init:", initial_guess)
-#
-#
-#     # getting fitting parameters from the initial guesses from the input
-#     centers = initial_guess['center']
-#     amplitudes = initial_guess['amplitude']
-#     alphas = initial_guess['alpha']
-#     gammas = initial_guess['gamma']
-#     initial_params = np.concatenate((centers, amplitudes, alphas, gammas))
-#
-#     # Define bounds for parameter optimization
-#     # center_bounds = [(center - 50, center + 50) for center in centers]
-#     # 5 secondary structures
-#     center_bounds = [(1623, 1641), (1642, 1657), (1648 , 1657), (1662 , 1686), (1674 , 1695)]
-#
-#     # 4 secondary structures
-#     # center_bounds = [(1624 , 1642), (1649 , 1663), (1665 , 1683), (1674 , 1695)]
-#     amplitude_bounds = (0.01, None)  # Allow positive amplitudes only
-#     alpha_bounds = (0.01, None)  # Allow positive alpha values only
-#     gamma_bounds = (0.01, None)  # Allow positive gamma values only
-#     bounds = center_bounds + [amplitude_bounds] * 4 + [alpha_bounds] * 4 + [gamma_bounds] * 4
-#
-#     # Optimization settings
-#     max_iterations = 100000000
-#     convergence_tolerance = 1e-10
-#
-#
-#     parameter_result = {}
-#
-#     progress_bar = st.progress(0, text="Fitting the Peaks of each Sample. Please wait...")
-#
-#     for idx, sample in enumerate(selected_samples):
-#         y_data = data[sample]
-#         # print("This is Y_mean", np.mean(y_data))
-#         x_data = data['x']
-#         # st.write("We are at this sample: ", sample)
-#         # Define the objective function (sum of squared differences)
-#
-#         progress = (idx+1)/len(selected_samples)
-#         progress_bar.progress(progress, text=f"Fitting the Peaks of each Sample. Please wait...   Sample   {idx+1} of {len(selected_samples)} Samples in calculation")
-#
-#
-#         def objective(params):
-#             y_fitted = composite_function(x_data, params)
-#             # y_fitted_2 = savgol_filter(y_fitted,window_length=15, polyorder=4, deriv=2)
-#             fit_quality = np.sqrt(np.mean((y_fitted - y_data) ** 2))
-#             # fit_quality_2 = np.sqrt(np.mean((np.array(minmax_scale(y_fitted_2)) - np.array(minmax_scale(Y_2)))**2))
-#             return fit_quality
-#
-#         # # Perform optimization
-#         result = minimize(objective, initial_params, bounds=bounds, method="L-BFGS-B",
-#                           options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
-#
-#
-#
-#
-#
-#         # Extract optimized parameters
-#         optimized_params = result.x
-#         parameter_result[sample] = optimized_params
-#     progress_bar.empty()
-#     return parameter_result
-#
-# def plot_fitted_spec(x_data, y_raw, params, initial_guess, sample):
-#     # drop empty rows
-#     initial_guess = initial_guess.dropna()
-#     total = np.zeros_like(x_data)
-#     num_peaks = len(initial_guess['peak'])
-#     peak_funcs = {'X': x_data}
-#     key_list = []
-#     sample_color = []
-#
-#     for i, peak in enumerate(initial_guess['peak']):
-#         center = params[i]
-#         amplitude = params[num_peaks + i]
-#         alpha = params[num_peaks * 2 + i]
-#         gamma = params[num_peaks * 3 + i]
-#         F_peak = V(x_data, center, amplitude, alpha, gamma)
-#         total += F_peak
-#         peak_funcs[peak] = F_peak
-#         key_list.append(peak)
-#
-#
-#     key_list.append('Fitted Spectrum')
-#     key_list.append('Original Data')
-#     peak_funcs['Fitted Spectrum'] = total
-#     peak_funcs['Original Data'] = y_raw
-#
-#
-#     RMSE = round((np.sqrt(np.mean((total - y_raw)**2))/max(y_raw)*100),2)
-#
-#     title = "Fitted Spectrum " + str(sample)
-#     fig = px.line(peak_funcs, x='X', y=key_list, title=title)
-#     fig.add_annotation(text=f'RMSE = {RMSE} %', x=0.9, y=0.9, xref='paper', yref='paper', showarrow=False)
-#
-#     # Update the figure's layout to set the width and height
-#     fig.update_layout(xaxis_title="Wavenumber [cm^-1]", yaxis_title="Intensity",
-#                       title_font=dict(size=20), width= 500)
-#     st.plotly_chart(fig)
-#
-#     return RMSE
-#
-#
-#
-#
-# def plot_peak_areas(x_data, y_raw, params, initial_guess, sample):
-#     # drop empty rows in initial_guess
-#     initial_guess = initial_guess.dropna()
-#     total = np.zeros_like(x_data)
-#     num_peaks = len(initial_guess['peak'])
-#     peak_funcs = {}
-#
-#
-#     for i, peak in enumerate(initial_guess['peak']):
-#         center = params[i]
-#         amplitude = params[num_peaks + i]
-#         alpha = params[num_peaks * 2 + i]
-#         gamma = params[num_peaks * 3 + i]
-#         F_peak = V(x_data, center, amplitude, alpha, gamma)
-#         total += F_peak
-#         peak_funcs[peak] = F_peak
-#
-#
-#
-#
-#     # Calculate the area under each peak
-#     # Calculate the total area under the fitted composite spectrum
-#     total_area = -np.trapz(total, x_data)
-#     # print("This is total_area: ", total_area)
-#     peak_percentages = []
-#     labels = []
-#     for peak, peak_values in peak_funcs.items():
-#         area = -np.trapz(peak_values, x_data)
-#         # print("This is ", peak, " Area", area)
-#         # Calculate the percentage of each peak's area relative to the total area
-#         peak_percentages.append(round(area / total_area * 100,2))
-#         # print("This is Peak_percentages", peak_percentages)
-#         labels.append(peak)
-#
-#
-#
-#     title = "Peak Percentages " + str(sample)
-#
-#     fig = px.bar(peak_percentages, labels, peak_percentages, title=title, color=labels)
-#
-#     # Update the figure's layout to set the width and height
-#     fig.update_layout(title=title, xaxis_title="Wavenumber [cm^-1]", yaxis_title="Area Percentage",
-#                       title_font=dict(size=20), width= 500)
-#
-#     st.plotly_chart(fig)
-#
-#     return peak_percentages
 
 
 def residual_err(x, y, params, sample, algorithm):
@@ -1026,41 +851,7 @@ def main():
 
                 if start_decon:
                     RMSE = []
-                    # if algorithm:
-                    #     # defining the columns of the heatmap_df for future use
-                    #     heatmap_df = pd.DataFrame(columns=parameters).dropna(axis=1, how='any')
-                    #     optimized_parameters = peak_fit(data, initial_guess, selected_samples)
-                    #
-                    #     # st.write(optimized_parameters)
-                    #
-                    #     col1, col2, col3 = st.columns(3)
-                    #
-                    #     for sample in selected_samples:
-                    #
-                    #         with col1:
-                    #
-                    #             sample_color = plot_fitted_spec(data['x'], data[sample], optimized_parameters[sample], initial_guess, sample)
-                    #
-                    #         with col2:
-                    #             peak_percentage = plot_peak_areas(data['x'], data[sample], optimized_parameters[sample], initial_guess, sample)
-                    #             heatmap_row = [sample] + peak_percentage
-                    #             heatmap_df.loc[len(heatmap_df)] = heatmap_row
-                    #             if 'heatmap_df' not in st.session_state:
-                    #                 st.session_state['heatmap_df'] = heatmap_df
-                    #             else:
-                    #                 st.session_state['heatmap_df'] = heatmap_df
-                    #
-                    #         with col3:
-                    #             residual_err(data['x'], data[sample], optimized_parameters[sample], sample, algorithm)
-                    #
-                    #
-                    #     # heat_bool = True
-                    #     if 'heat_bool' not in st.session_state:
-                    #         st.session_state['heat_bool'] = True
-                    #     else:
-                    #         st.session_state['heat_bool'] = True
-                    # else:
-                    # defining the columns of the heatmap_df for future use
+
                     heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
                     optimized_parameters_lev = peak_fit_lev(data, initial_guess_lev, selected_samples, algorithm)
 
