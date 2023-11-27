@@ -1089,6 +1089,7 @@ def main():
 
                             residual_err(data['x'], data[sample], optimized_parameters_lev[sample], sample, algorithm)
 
+                    st.session_state['RMSE'] = RMSE
 
                     # heat_bool = True
                     if 'heat_bool' not in st.session_state:
@@ -1147,7 +1148,7 @@ def main():
 
             if 'heatmap_df' in st.session_state:
                 peak_percentage = st.session_state['heatmap_df']
-                peak_percentage['RMSE'] = RMSE
+                peak_percentage['RMSE'] = st.session_state['RMSE']
             else:
                 peak_percentage = pd.DataFrame()
 
