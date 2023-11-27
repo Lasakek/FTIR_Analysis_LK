@@ -408,12 +408,12 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
     # upper_bounds = [1641] + [1657] + [1657] + [1686] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
     # lower_bounds = [1623] + [1642] + [1648] + [1662] + [1674] + [0] * len(mu) + [0] * len(mu)
 
-    upper_bounds = [1640] + [1648] + [1660] + [1670] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
-    lower_bounds = [1625] + [1640] + [1648] + [1660] + [1675] + [0] * len(mu) + [0] * len(mu)
+    # upper_bounds = [1640] + [1648] + [1660] + [1670] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
+    # lower_bounds = [1625] + [1640] + [1648] + [1660] + [1675] + [0] * len(mu) + [0] * len(mu)
 
     # 4 secondary structures
-    # upper_bounds = [1642] + [1663] + [1683] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
-    # lower_bounds = [1624] + [1649] + [1665] + [1674] + [0] * len(mu) + [0] * len(mu)
+    upper_bounds = [1642] + [1650] + [1659] + [1699] + [np.inf] * len(mu) + [np.inf] * len(mu)
+    lower_bounds = [1628] + [1643] + [1650] + [1660] + [0] * len(mu) + [0] * len(mu)
 
     # upper_bounds = [center + 50 for center in mu] + [np.inf] * len(mu) + [np.inf] * len(mu)
     # lower_bounds = [center - 50 for center in mu] + [0] * len(mu) + [0] * len(mu)
@@ -827,9 +827,9 @@ def main():
         st.markdown('**Fitting Parameters**')
         default_data_lev = {
             'peak': ['β-Sheet', 'random-coil', 'α-Helix', 'β-Turn', 'β-Sheet_2'],
-            'center': [1632, 1644, 1654, 1665, 1685],
-            'amplitude': [0.6, 0.4, 0.1, 0.1, 0.1],
-            'sigma': [10, 6, 4, 4, 4]
+            'center': [1632, 1646.5, 1654.5, 1680],
+            'amplitude': [0.6, 0.4, 0.1, 0.1],
+            'sigma': [10, 6, 4, 4]
         }
         df_lev = pd.DataFrame(default_data_lev)
 
