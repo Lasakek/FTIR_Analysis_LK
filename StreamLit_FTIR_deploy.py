@@ -405,8 +405,8 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
 
     # Combine all bounds into a single list
     # 5 secondary structures
-    upper_bounds = [1640] + [1648] + [1660] + [1670] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
-    lower_bounds = [1625] + [1640] + [1648] + [1660] + [1675] + [0] * len(mu) + [0] * len(mu)
+    upper_bounds = [1641] + [1657] + [1657] + [1686] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
+    lower_bounds = [1623] + [1642] + [1648] + [1662] + [1674] + [0] * len(mu) + [0] * len(mu)
 
     # 4 secondary structures
     # upper_bounds = [1642] + [1663] + [1683] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
@@ -595,7 +595,7 @@ def peak_fit(data, initial_guess, selected_samples):
     # Define bounds for parameter optimization
     # center_bounds = [(center - 50, center + 50) for center in centers]
     # 5 secondary structures
-    center_bounds = [(1625 , 1640), (1640 , 1648), (1648 , 1660), (1660 , 1670), (1675 , 1695)]
+    center_bounds = [(1623, 1641), (1642, 1657), (1648 , 1657), (1662 , 1686), (1674 , 1695)]
 
     # 4 secondary structures
     # center_bounds = [(1624 , 1642), (1649 , 1663), (1665 , 1683), (1674 , 1695)]
@@ -997,7 +997,7 @@ def main():
         st.markdown('**Fitting Parameters**')
         default_data_lev = {
             'peak': ['β-Sheet', 'random-coil', 'α-Helix', 'β-Turn', 'β-Sheet_2'],
-            'center': [1633, 1644, 1654, 1665, 1685],
+            'center': [1633, 1654, 1654, 1672, 1684],
             'amplitude': [0.6, 0.4, 0.1, 0.1, 0.1],
             'sigma': [10, 6, 4, 4, 4]
         }
