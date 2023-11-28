@@ -827,9 +827,9 @@ def main():
         st.markdown('**Fitting Parameters**')
         default_data_lev = {
             'peak': ['β-Sheet', 'random-coil', 'α-Helix', 'β-Turn'],
-            'center': [1632, 1646.5, 1654.5, 1680],
-            'amplitude': [0.6, 0.4, 0.1, 0.1],
-            'sigma': [10, 6, 4, 4]
+            'center': [1632, 1646.5, 1654.5, 1672, 1684],
+            'amplitude': [0.6, 0.4, 0.1, 0.1, 0.1],
+            'sigma': [10, 6, 4, 4, 4]
         }
         df_lev = pd.DataFrame(default_data_lev)
 
