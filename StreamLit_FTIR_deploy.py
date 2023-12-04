@@ -55,6 +55,33 @@ def iterative_average(spectrum, threshold=0.001):
 
     return smoothed
 
+
+# def iterative_average(spectrum, threshold=0.0021):
+#     # Initialize the spectrum
+#     new_spectrum = np.copy(spectrum)
+#
+#     # Calculate the second derivative of the spectrum
+#     second_derivative = np.gradient(np.gradient(new_spectrum))
+#
+#     # Update the intensities iteratively
+#     while True:
+#         old_spectrum = np.copy(new_spectrum)
+#         for i in range(0, len(spectrum) - 1):
+#             if second_derivative[i] > 0:
+#                 new_spectrum[i + 1] = new_spectrum[i + 1]
+#             elif second_derivative[i + 1] < 0:
+#                 new_spectrum[i] = (new_spectrum[i] + new_spectrum[i + 2])/2
+#
+#         # Calculate the value Sabs
+#         Sabs = np.sum(np.abs(new_spectrum - old_spectrum))
+#
+#         # Check the termination condition
+#         if Sabs / np.sum(np.abs(new_spectrum)) < threshold:
+#             break
+#
+#     return new_spectrum
+
+
 #-------------Read in Data from .csv file---------------#
 def csv_to_data(uploaded_file):
     if uploaded_file is not None:
@@ -330,7 +357,7 @@ def second_der_plots(data, show_plots):
             y_values = data[sample_col]
             # first_derivate = np.gradient(y_values,x_values)
             # second_derivative = np.gradient(first_derivate, x_values)
-            second_derivative = savgol_filter(y_values, window_length=15, polyorder=4, deriv=2)
+            second_derivative = savgol_filter(y_values, window_length=14, polyorder=4, deriv=2)
 
             second_derivative_data[sample_col] = -second_derivative
 
@@ -376,16 +403,16 @@ def second_der_plots(data, show_plots):
 #---------Peak Deconvolution Functions------------------#
 
 #------LEV-------------------#
-def V_lev(x, A, mu, sigma):
-    return A * np.exp(-(x - mu) ** 2 / (2 * sigma ** 2))
+def V_lev(x, A, mu, FWHM):
+    return A * np.exp(-(x - mu) ** 2 / (2 * FWHM ** 2))
 def composite_function_lev(x, params):
     num_peaks = len(params) // 3
     total = np.zeros_like(x)
     for i in range(num_peaks):
         mu = params[i]
         A = params[num_peaks + i]
-        sigma = params[num_peaks * 2 + i]
-        total += V_lev(x, A, mu, sigma)
+        FWHM = params[num_peaks * 2 + i]
+        total += V_lev(x, A, mu, FWHM)
     return total
 
 
@@ -398,9 +425,9 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
     # getting fitting parameters from the initial guesses from the input
     mu = initial_guess['center']
     A = initial_guess['amplitude']
-    sigma = initial_guess['sigma']
+    FWHM = initial_guess['FWHM']
 
-    initial_params_lev = np.concatenate((mu, A, sigma))
+    initial_params_lev = np.concatenate((mu, A, FWHM))
 
 
     # Combine all bounds into a single list
@@ -487,8 +514,8 @@ def plot_fitted_spec_lev(x_data, y_raw, params, initial_guess, sample):
     for i, peak in enumerate(initial_guess['peak']):
         mu = params[i]
         A = params[num_peaks + i]
-        sigma = params[num_peaks * 2 + i]
-        F_peak = V_lev(x_data, A, mu, sigma)
+        FWHM = params[num_peaks * 2 + i]
+        F_peak = V_lev(x_data, A, mu, FWHM)
         total += F_peak
         peak_funcs[peak] = F_peak
         key_list.append(peak)
@@ -525,8 +552,8 @@ def plot_peak_areas_lev(x_data, y_raw, params, initial_guess, sample):
     for i, peak in enumerate(initial_guess['peak']):
         mu = params[i]
         A = params[num_peaks + i]
-        sigma = params[num_peaks * 2 + i]
-        F_peak = V_lev(x_data, A, mu, sigma)
+        FWHM = params[num_peaks * 2 + i]
+        F_peak = V_lev(x_data, A, mu, FWHM)
         total += F_peak
         peak_funcs[peak] = F_peak
 
@@ -829,7 +856,7 @@ def main():
             'peak': ['β-Sheet', 'random-coil', 'α-Helix', 'β-Turn', 'β-Sheet_2'],
             'center': [1632, 1644, 1654, 1665, 1685],
             'amplitude': [0.6, 0.4, 0.1, 0.1, 0.1],
-            'sigma': [10, 6, 4, 4, 4]
+            'FWHM': [10, 6, 4, 4, 4]
         }
         df_lev = pd.DataFrame(default_data_lev)
 
