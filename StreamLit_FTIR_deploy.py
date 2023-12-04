@@ -886,26 +886,31 @@ def main():
                     col1, col2, col3 = st.columns(3)
 
                     for sample in selected_samples:
+                        for object in sample_objects:
+                            if sample == object.sample_name:
+                                title_name = object.give_file_name()
 
-                        with col1:
 
-                            error = plot_fitted_spec_lev(data['x'], data[sample], optimized_parameters_lev[sample],
-                                                            initial_guess_lev, sample)
-                            RMSE.append(error)
+                                with col1:
 
-                        with col2:
-                            peak_percentage = plot_peak_areas_lev(data['x'], data[sample], optimized_parameters_lev[sample],
-                                                              initial_guess_lev, sample)
-                            heatmap_row = [sample] + peak_percentage
-                            heatmap_df.loc[len(heatmap_df)] = heatmap_row
-                            if 'heatmap_df' not in st.session_state:
-                                st.session_state['heatmap_df'] = heatmap_df
-                            else:
-                                st.session_state['heatmap_df'] = heatmap_df
 
-                        with col3:
+                                    error = plot_fitted_spec_lev(data['x'], data[sample], optimized_parameters_lev[sample],
+                                                                    initial_guess_lev, title_name)
+                                    RMSE.append(error)
 
-                            residual_err(data['x'], data[sample], optimized_parameters_lev[sample], sample, algorithm)
+                                with col2:
+                                    peak_percentage = plot_peak_areas_lev(data['x'], data[sample], optimized_parameters_lev[sample],
+                                                                      initial_guess_lev, title_name)
+                                    heatmap_row = [sample] + peak_percentage
+                                    heatmap_df.loc[len(heatmap_df)] = heatmap_row
+                                    if 'heatmap_df' not in st.session_state:
+                                        st.session_state['heatmap_df'] = heatmap_df
+                                    else:
+                                        st.session_state['heatmap_df'] = heatmap_df
+
+                                with col3:
+
+                                    residual_err(data['x'], data[sample], optimized_parameters_lev[sample], title_name, algorithm)
 
                     st.session_state['RMSE'] = RMSE
 
