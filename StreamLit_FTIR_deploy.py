@@ -535,8 +535,8 @@ def plot_fitted_spec_lev(x_data, y_raw, params, initial_guess, sample):
             'format': 'png',  # one of png, svg, jpeg, webp
             'filename': title,
             'height': 1800,
-            'width': 2000,
-            'scale': 4  # Multiply title/legend/axis/canvas sizes by this factor
+            'width': 2000
+            # 'scale': 4  # Multiply title/legend/axis/canvas sizes by this factor
         }
     }
     fig = px.line(peak_funcs, x='X', y=key_list, title=title)
@@ -592,8 +592,8 @@ def plot_peak_areas_lev(x_data, y_raw, params, initial_guess, sample):
             'format': 'png',  # one of png, svg, jpeg, webp
             'filename': title,
             'height': 1800,
-            'width': 2000,
-            'scale': 4  # Multiply title/legend/axis/canvas sizes by this factor
+            'width': 2000
+            # 'scale': 4  # Multiply title/legend/axis/canvas sizes by this factor
         }
     }
 
@@ -624,8 +624,8 @@ def residual_err(x, y, params, sample, algorithm):
             'format': 'png',  # one of png, svg, jpeg, webp
             'filename': title,
             'height': 1800,
-            'width': 2000,
-            'scale': 4  # Multiply title/legend/axis/canvas sizes by this factor
+            'width': 2000
+            # 'scale': 4  # Multiply title/legend/axis/canvas sizes by this factor
         }
     }
     fig = px.scatter(res, x='x', y='residuals', title=title)
