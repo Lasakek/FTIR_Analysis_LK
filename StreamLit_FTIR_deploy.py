@@ -530,13 +530,22 @@ def plot_fitted_spec_lev(x_data, y_raw, params, initial_guess, sample):
     RMSE = round((np.sqrt(np.mean((total - y_raw)**2))/max(y_raw)*100),2)
 
     title = "Fitted Spectrum " + str(sample)
+    config = {
+        'toImageButtonOptions': {
+            'format': 'png',  # one of png, svg, jpeg, webp
+            'filename': title,
+            'height': 2000,
+            'width': 1800,
+            'scale': 1  # Multiply title/legend/axis/canvas sizes by this factor
+        }
+    }
     fig = px.line(peak_funcs, x='X', y=key_list, title=title)
     fig.add_annotation(text=f'RMSE = {RMSE} %', x=0.9, y=0.9, xref='paper', yref='paper', showarrow=False)
 
     # Update the figure's layout to set the width and height
     fig.update_layout(xaxis_title="Wavenumber [cm^-1]", yaxis_title="Intensity",
                       title_font=dict(size=20), width= 500)
-    st.plotly_chart(fig)
+    st.plotly_chart(fig, config = config)
 
 
     return RMSE
@@ -578,13 +587,23 @@ def plot_peak_areas_lev(x_data, y_raw, params, initial_guess, sample):
 
     title = "Peak Percentages " + str(sample)
 
+    config = {
+        'toImageButtonOptions': {
+            'format': 'png',  # one of png, svg, jpeg, webp
+            'filename': title,
+            'height': 2000,
+            'width': 1800,
+            'scale': 1  # Multiply title/legend/axis/canvas sizes by this factor
+        }
+    }
+
     fig = px.bar(peak_percentages, labels, peak_percentages, title=title, color=labels)
 
     # Update the figure's layout to set the width and height
     fig.update_layout(title=title, xaxis_title="Wavenumber [cm^-1]", yaxis_title="Area Percentage",
                       title_font=dict(size=20), width= 500, yaxis=dict(range=[0, 100]))
 
-    st.plotly_chart(fig)
+    st.plotly_chart(fig, config=config)
 
     return peak_percentages
 
@@ -600,9 +619,18 @@ def residual_err(x, y, params, sample, algorithm):
     res['x'] = x
     res['residuals'] = residual
     title = "Residual Error Behaviour " + str(sample)
+    config = {
+        'toImageButtonOptions': {
+            'format': 'png',  # one of png, svg, jpeg, webp
+            'filename': title,
+            'height': 2000,
+            'width': 1800,
+            'scale': 1  # Multiply title/legend/axis/canvas sizes by this factor
+        }
+    }
     fig = px.scatter(res, x='x', y='residuals', title=title)
     fig.update_layout(xaxis_title="Wavenumber [cm^-1]", yaxis_title="Residual", width= 500)
-    st.plotly_chart(fig)
+    st.plotly_chart(fig, config=config)
 
 
 
