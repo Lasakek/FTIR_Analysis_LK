@@ -630,7 +630,7 @@ def residual_err(x, y, params, sample, algorithm):
     }
     fig = px.scatter(res, x='x', y='residuals', title=title)
     fig.update_layout(xaxis_title="Wavenumber [cm^-1]", yaxis_title="Residual", width= 500)
-    st.plotly_chart(fig, config=config)
+    st.plotly_chart(fig, config = config)
 
 
 
@@ -900,7 +900,6 @@ def main():
                 st.warning("Please turn on Normalization for this Step.")
 
             else:
-
 
                 algorithm = st.toggle("Turn Off for Least Squares Fit | Turn on for RMSE Fit")
                 start_decon = st.button("Press to Start Deconvolution")
