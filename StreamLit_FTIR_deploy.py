@@ -901,6 +901,7 @@ def main():
 
             else:
 
+
                 algorithm = st.toggle("Turn Off for Least Squares Fit | Turn on for RMSE Fit")
                 start_decon = st.button("Press to Start Deconvolution")
 
