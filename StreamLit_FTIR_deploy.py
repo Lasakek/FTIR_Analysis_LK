@@ -657,7 +657,7 @@ def plot_heatmap(parameters):
                           title_font=dict(size=20),
                           tickfont=dict(size=20)))
 
-    st.plotly_chart(fig)
+    st.plotly_chart(fig, config=config)
     return for_real
 
 
@@ -830,7 +830,7 @@ def main():
                               xaxis=dict(title_font=dict(size=25)),
                               yaxis=dict(title_font=dict(size=25)),
                               legend_font=dict(size=20))
-            st.plotly_chart(fig)
+            st.plotly_chart(fig, config=config)
             # Create a button for downloading the DataFrame as an Excel file
             # Option to download using Streamlit's built-in function
             csv = data.to_csv().encode('utf-8')
