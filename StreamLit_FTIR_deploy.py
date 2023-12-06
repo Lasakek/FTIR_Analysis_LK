@@ -638,7 +638,15 @@ def plot_heatmap(parameters):
     miami = parameters.drop('Sample', axis=1)
     for_real = round(miami.corr(),2)
     # print(for_real)
-
+    config = {
+        'toImageButtonOptions': {
+            'format': 'png',  # one of png, svg, jpeg, webp
+            'filename': 'Heatmapt_Plot',
+            # 'height': 1800,
+            # 'width': 2000,
+            'scale': 4  # Multiply title/legend/axis/canvas sizes by this factor
+        }
+    }
     fig = px.imshow(for_real, text_auto=True, aspect="auto")
     fig.update_layout(width=1000, height=1000, title="Correlation Heatmap",
                       title_font=dict(size=20),
@@ -805,6 +813,15 @@ def main():
 
 
             # Plot the selected samples using Plotly Express
+            config = {
+                'toImageButtonOptions': {
+                    'format': 'png',  # one of png, svg, jpeg, webp
+                    'filename': 'Raw_Data_Plot',
+                    # 'height': 1800,
+                    # 'width': 2000,
+                    'scale': 4  # Multiply title/legend/axis/canvas sizes by this factor
+                }
+            }
             fig = px.line(data, x='x', y=selected_samples,
                           title='Y-values of Selected Samples (Normalized)' if normalization else 'Y-values of Selected Samples')
             # Update the figure's layout to set the width and height
