@@ -1,6 +1,9 @@
 import streamlit as st
 from bs4 import BeautifulSoup
-from scipy.signal import savgol_filter, find_peaks
+from scipy.signal import savgol_filter, find_peaks, gaussian
+from scipy.optimize import minimize, curve_fit
+from scipy.sparse import csc_matrix, eye, diags
+from scipy.sparse.linalg import spsolve
 import pandas as pd
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import minmax_scale
@@ -44,16 +47,68 @@ class FTIR:
 
 
 #---------------Baselinge Correction---------------------#
-def iterative_average(spectrum, threshold=0.001):
-    smoothed = savgol_filter(spectrum, window_length=5, polyorder=1)
-    diff = np.abs(spectrum - smoothed).sum()
+def WhittakerSmooth(x, w, lambda_, differences=1):
+    '''
+    Penalized least squares algorithm for background fitting
 
-    while diff > threshold * len(spectrum):
-        spectrum -= smoothed
-        smoothed = savgol_filter(spectrum, window_length=5, polyorder=1)
-        diff = np.abs(spectrum - smoothed).sum()
+    input
+        x: input data (i.e. chromatogram of spectrum)
+        w: binary masks (value of the mask is zero if a point belongs to peaks and one otherwise)
+        lambda_: parameter that can be adjusted by user. The larger lambda is,  the smoother the resulting background
+        differences: integer indicating the order of the difference of penalties
 
-    return smoothed
+    output
+        the fitted background vector
+    '''
+    X = np.matrix(x)
+    m = X.size
+    E = eye(m, format='csc')
+    for i in range(differences):
+        E = E[1:] - E[:-1]  # numpy.diff() does not work with sparse matrix. This is a workaround.
+    W = diags(w, 0, shape=(m, m))
+    A = csc_matrix(W + (lambda_ * E.T * E))
+    B = csc_matrix(W * X.T)
+    background = spsolve(A, B)
+    return np.array(background)
+
+def baseline_substraction(x, lambda_=100, porder=1, itermax=15):
+    '''
+    Adaptive iteratively reweighted penalized least squares for baseline fitting
+
+    input
+        x: input data (i.e. chromatogram of spectrum)
+        lambda_: parameter that can be adjusted by user. The larger lambda is,  the smoother the resulting background, z
+        porder: adaptive iteratively reweighted penalized least squares for baseline fitting
+
+    output
+        the fitted background vector
+    '''
+    m = x.shape[0]
+    w = np.ones(m)
+    for i in range(1, itermax + 1):
+        z = WhittakerSmooth(x, w, lambda_, porder)
+        d = x - z
+        dssn = np.abs(d[d < 0].sum())
+        if (dssn < 0.001 * (abs(x)).sum() or i == itermax):
+            if (i == itermax): print('WARING max iteration reached!')
+            break
+        w[
+            d >= 0] = 0  # d>0 means that this point is part of a peak, so its weight is set to 0 in order to ignore it
+        w[d < 0] = np.exp(i * np.abs(d[d < 0]) / dssn)
+        w[0] = np.exp(i * (d[d < 0]).max() / dssn)
+        w[-1] = w[0]
+    return z
+
+
+    # smoothed = savgol_filter(spectrum, window_length=5, polyorder=1)
+    # diff = np.abs(spectrum - smoothed).sum()
+    #
+    # while diff > threshold * len(spectrum):
+    #     spectrum -= smoothed
+    #     smoothed = savgol_filter(spectrum, window_length=5, polyorder=1)
+    #     diff = np.abs(spectrum - smoothed).sum()
+    #
+    # return smoothed
 
 
 # def iterative_average(spectrum, threshold=0.0021):
@@ -158,7 +213,7 @@ def xml_to_data(uploaded_file):
                 st.error(f"Could not find Y-values in {file}", icon="🚨")
 
             # y_values = savgol_filter(y_values, window_length=15, polyorder=4)
-            y_values = iterative_average((y_values))
+            y_values = baseline_substraction((y_values))
 
             fxv_tag = soup.find('parameter', {'name': 'FXV'})
             lxv_tag = soup.find('parameter', {'name': 'LXV'})
