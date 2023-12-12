@@ -100,42 +100,6 @@ def baseline_substraction(x, lambda_=100, porder=1, itermax=15):
     return z
 
 
-    # smoothed = savgol_filter(spectrum, window_length=5, polyorder=1)
-    # diff = np.abs(spectrum - smoothed).sum()
-    #
-    # while diff > threshold * len(spectrum):
-    #     spectrum -= smoothed
-    #     smoothed = savgol_filter(spectrum, window_length=5, polyorder=1)
-    #     diff = np.abs(spectrum - smoothed).sum()
-    #
-    # return smoothed
-
-
-# def iterative_average(spectrum, threshold=0.0021):
-#     # Initialize the spectrum
-#     new_spectrum = np.copy(spectrum)
-#
-#     # Calculate the second derivative of the spectrum
-#     second_derivative = np.gradient(np.gradient(new_spectrum))
-#
-#     # Update the intensities iteratively
-#     while True:
-#         old_spectrum = np.copy(new_spectrum)
-#         for i in range(0, len(spectrum) - 1):
-#             if second_derivative[i] > 0:
-#                 new_spectrum[i + 1] = new_spectrum[i + 1]
-#             elif second_derivative[i + 1] < 0:
-#                 new_spectrum[i] = (new_spectrum[i] + new_spectrum[i + 2])/2
-#
-#         # Calculate the value Sabs
-#         Sabs = np.sum(np.abs(new_spectrum - old_spectrum))
-#
-#         # Check the termination condition
-#         if Sabs / np.sum(np.abs(new_spectrum)) < threshold:
-#             break
-#
-#     return new_spectrum
-
 
 #-------------Read in Data from .csv file---------------#
 def csv_to_data(uploaded_file):
