@@ -509,6 +509,7 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
             # # Perform optimization
             result = minimize(objective, initial_params_lev, bounds=bounds, method="SLSQP",
                               options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
+
         else:
             result = least_squares(objective_lev, initial_params_lev, bounds=bounds, method="lm", gtol=1e-5, xtol=1e-5, ftol=1e-5)
 
