@@ -171,7 +171,7 @@ def xml_to_data(uploaded_file):
                     y_values = struct.unpack(f'{len(encoded_y_values) // struct.calcsize("f")}f', encoded_y_values)
 
                     # Convert the list into an array
-                    y_values = np.array('f', y_values)
+                    y_values = np.array(y_values)
 
             else:
                 st.error(f"Could not find Y-values in {file}", icon="🚨")
