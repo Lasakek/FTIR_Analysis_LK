@@ -507,10 +507,10 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
             convergence_tolerance = 1e-10
 
             # # Perform optimization
-            result = minimize(objective, initial_params_lev, bounds=bounds, method="L-BFGS-B",
+            result = minimize(objective, initial_params_lev, bounds=bounds, method="SLSQP",
                               options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
         else:
-            result = least_squares(objective_lev, initial_params_lev, bounds=bounds, method="trf", gtol=1e-5, xtol=1e-5, ftol=1e-5)
+            result = least_squares(objective_lev, initial_params_lev, bounds=bounds, method="lm", gtol=1e-5, xtol=1e-5, ftol=1e-5)
 
 
         # Extract optimized parameters
