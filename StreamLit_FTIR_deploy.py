@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 from bs4 import BeautifulSoup
-from scipy.signal import savgol_filter, find_peaks, gaussian
+from scipy.signal import savgol_filter, find_peaks
 from scipy.optimize import minimize, curve_fit
 from scipy.sparse import csc_matrix, eye, diags
 from scipy.sparse.linalg import spsolve
@@ -152,7 +152,7 @@ def csv_to_data(uploaded_file, base):
 
 
 #----------Reading in Data from .xml files---------------#
-def xml_to_data(uploaded_file, base):
+def xml_to_data(uploaded_file, win, porder, base):
     if uploaded_file is not None:
         file_idx = 0
         file_names = []
@@ -186,7 +186,7 @@ def xml_to_data(uploaded_file, base):
             y_values = y_values - baseline_substraction(y_values)
 
             if base:
-                y_values = savgol_filter(y_values, window_length=15, polyorder=4)
+                y_values = savgol_filter(y_values, window_length=win, polyorder=porder)
 
             fxv_tag = soup.find('parameter', {'name': 'FXV'})
             lxv_tag = soup.find('parameter', {'name': 'LXV'})
@@ -702,6 +702,8 @@ def main():
     st.set_page_config(layout="wide")
     # Define content for the Analysis Page (you can create another tab for analysis)
     st.session_state['base'] = st.toggle("Turn on for Smoothing")
+    st.session_state['win'] = st.slider("Win", 1,1000,15)
+    st.session_state['porder'] = st.slider("porder", 1,8,4)
     #-----------------all of the Sidebar Input--------------------------#
     st.sidebar.header("Upload your FTIR Files here:")
 
@@ -711,7 +713,7 @@ def main():
 
     if not csv_toggle:
         uploaded_file = st.sidebar.file_uploader("Choose a file", type=['xml'], help='You are only able to upload .xml files.', accept_multiple_files=True)
-        sample_names, file_names, sample_objects = xml_to_data(uploaded_file, st.session_state['base'])
+        sample_names, file_names, sample_objects = xml_to_data(uploaded_file, st.session_state['win'], st.session_state['porder'], st.session_state['base'])
         data_table = pd.DataFrame({"Sample Names": sample_names, "File Names": file_names})
     else:
         uploaded_file = st.sidebar.file_uploader("You are only able to upload .csv files with x-values in first columns and y-values in the second column.", type=['csv'],
