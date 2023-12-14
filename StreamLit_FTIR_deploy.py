@@ -951,13 +951,13 @@ def main():
                 start_decon = st.button("Press to Start Deconvolution")
 
                 if start_decon:
-                    start_time = time.time()
+                    # start_time = time.time()
                     RMSE = []
 
                     heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
                     optimized_parameters_lev = peak_fit_lev(data, initial_guess_lev, selected_samples, algorithm)
-                    end_time = time.time()
-                    st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples))
+                    # end_time = time.time()
+                    # st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples))
 
                     col1, col2, col3 = st.columns(3)
 
