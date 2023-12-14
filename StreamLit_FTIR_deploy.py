@@ -125,7 +125,7 @@ def csv_to_data(uploaded_file, lambda_, porder_):
             except Exception as e:
                 st.warning("Please ensure the correct structure of the .csv file: \n x-values, y-values\n x1, y1\n x2, y2")
 
-            y_values = baseline_substraction((y_values, lambda_, porder_))
+            y_values = baseline_substraction(y_values, lambda_, porder_)
 
             sample_name = f"Sample_{file_idx}"
 
@@ -180,7 +180,7 @@ def xml_to_data(uploaded_file, lambda_, porder_):
                 st.error(f"Could not find Y-values in {file}", icon="🚨")
 
             # y_values = savgol_filter(y_values, window_length=15, polyorder=4)
-            y_values = baseline_substraction((y_values, lambda_, porder_))
+            y_values = baseline_substraction(y_values, lambda_, porder_)
 
             fxv_tag = soup.find('parameter', {'name': 'FXV'})
             lxv_tag = soup.find('parameter', {'name': 'LXV'})
