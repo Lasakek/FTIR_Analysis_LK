@@ -507,7 +507,7 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
             convergence_tolerance = 1e-10
 
             # # Perform optimization
-            result = minimize(objective, initial_params_lev, bounds=bounds, method="SLSQP",
+            result = minimize(objective, initial_params_lev, bounds=bounds, method="COBYLA",
                               options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
 
         else:
