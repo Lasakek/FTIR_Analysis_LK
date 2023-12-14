@@ -103,7 +103,7 @@ def baseline_substraction(x, lambda_, porder, itermax=15):
 
 
 #-------------Read in Data from .csv file---------------#
-def csv_to_data(uploaded_file, lambda_, porder_):
+def csv_to_data(uploaded_file, lambda_, porder_, base):
     if uploaded_file is not None:
         file_names = []
         sample_names = []
@@ -125,7 +125,8 @@ def csv_to_data(uploaded_file, lambda_, porder_):
             except Exception as e:
                 st.warning("Please ensure the correct structure of the .csv file: \n x-values, y-values\n x1, y1\n x2, y2")
 
-            y_values = baseline_substraction(y_values, lambda_, porder_)
+            if base:
+                y_values = baseline_substraction(y_values, lambda_, porder_)
 
             sample_name = f"Sample_{file_idx}"
 
@@ -149,7 +150,7 @@ def csv_to_data(uploaded_file, lambda_, porder_):
 
 
 #----------Reading in Data from .xml files---------------#
-def xml_to_data(uploaded_file, lambda_, porder_):
+def xml_to_data(uploaded_file, lambda_, porder_, base):
     if uploaded_file is not None:
         file_idx = 0
         file_names = []
@@ -180,7 +181,8 @@ def xml_to_data(uploaded_file, lambda_, porder_):
                 st.error(f"Could not find Y-values in {file}", icon="🚨")
 
             # y_values = savgol_filter(y_values, window_length=15, polyorder=4)
-            y_values = baseline_substraction(y_values, lambda_, porder_)
+            if base:
+                y_values = baseline_substraction(y_values, lambda_, porder_)
 
             fxv_tag = soup.find('parameter', {'name': 'FXV'})
             lxv_tag = soup.find('parameter', {'name': 'LXV'})
@@ -699,6 +701,7 @@ def main():
     #-----------------all of the Sidebar Input--------------------------#
     st.session_state['lambda'] = st.slider("Lambda: ", 1,200,10)
     st.session_state['porder'] = st.slider("Porder", 1,10,1)
+    st.session_state['base'] = st.toggle("Turn on for baseline_correction")
     st.sidebar.header("Upload your FTIR Files here:")
 
 
@@ -707,12 +710,12 @@ def main():
 
     if not csv_toggle:
         uploaded_file = st.sidebar.file_uploader("Choose a file", type=['xml'], help='You are only able to upload .xml files.', accept_multiple_files=True)
-        sample_names, file_names, sample_objects = xml_to_data(uploaded_file, st.session_state['lambda'], st.session_state['porder'])
+        sample_names, file_names, sample_objects = xml_to_data(uploaded_file, st.session_state['lambda'], st.session_state['porder'], st.session_state['base'])
         data_table = pd.DataFrame({"Sample Names": sample_names, "File Names": file_names})
     else:
         uploaded_file = st.sidebar.file_uploader("You are only able to upload .csv files with x-values in first columns and y-values in the second column.", type=['csv'],
                                                  accept_multiple_files=True)
-        sample_names, file_names, sample_objects = csv_to_data(uploaded_file, st.session_state['lambda'], st.session_state['porder'])
+        sample_names, file_names, sample_objects = csv_to_data(uploaded_file, st.session_state['lambda'], st.session_state['porder'],st.session_state['base'])
         data_table = pd.DataFrame({"Sample Names": sample_names, "File Names": file_names})
        
     st.sidebar.markdown("**Your Data:**")
