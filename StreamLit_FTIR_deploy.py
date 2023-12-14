@@ -697,8 +697,8 @@ def main():
     # Define content for the Analysis Page (you can create another tab for analysis)
 
     #-----------------all of the Sidebar Input--------------------------#
-    st.session_state['lambda'] = st.slider("Lambda: ", 1,100,10)
-    st.session_state['porder'] = st.slider("Porder", 1,4,1)
+    st.session_state['lambda'] = st.slider("Lambda: ", 1,200,10)
+    st.session_state['porder'] = st.slider("Porder", 1,10,1)
     st.sidebar.header("Upload your FTIR Files here:")
 
 
