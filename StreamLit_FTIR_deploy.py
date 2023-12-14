@@ -515,6 +515,9 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
                               options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
 
         else:
+            # Optimization settings
+            max_iterations = 100000000
+            convergence_tolerance = 1e-10
             result = minimize(objective_LS, initial_params_lev, bounds=bounds, method="trust-constr",
                               options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
             # result = least_squares(objective_lev, initial_params_lev, bounds=bounds, method="dogbox", gtol=1e-5, xtol=1e-5, ftol=1e-5)
