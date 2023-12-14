@@ -480,14 +480,19 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
         progress = (idx+1) / len(selected_samples)
         progress_bar.progress(progress, text=f"Fitting the Peaks of each Sample. Please wait...   Sample   {idx+1} of {len(selected_samples)} Samples in calculation")
 
-        def objective_lev(params):
-            # st.write(1)
+        # def objective_lev(params):
+        #     # st.write(1)
+        #     y_fitted = composite_function_lev(x_data, params)
+        #     # st.write(2)
+        #     fit_quality = y_fitted - y_data
+        #     RMSE = (np.sqrt(np.mean((y_fitted - y_data) ** 2)) / max(y_data) * 100)
+        #     # print(RMSE)
+        #     return np.array(fit_quality)
+
+        def objective_LS(params):
             y_fitted = composite_function_lev(x_data, params)
-            # st.write(2)
-            fit_quality = y_fitted - y_data
-            RMSE = (np.sqrt(np.mean((y_fitted - y_data) ** 2)) / max(y_data) * 100)
-            # print(RMSE)
-            return np.array(fit_quality)
+            fit_quality = np.sum(((y_fitted - y_data) ** 2))
+            return fit_quality
 
 
 
@@ -498,9 +503,7 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
 
             def objective(params):
                 y_fitted = composite_function_lev(x_data, params)
-                # y_fitted_2 = savgol_filter(y_fitted,window_length=15, polyorder=4, deriv=2)
                 fit_quality = np.sqrt(np.mean((y_fitted - y_data) ** 2))
-                # fit_quality_2 = np.sqrt(np.mean((np.array(minmax_scale(y_fitted_2)) - np.array(minmax_scale(Y_2)))**2))
                 return fit_quality
 
             # Optimization settings
@@ -508,11 +511,13 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
             convergence_tolerance = 1e-10
 
             # # Perform optimization
-            result = minimize(objective, initial_params_lev, bounds=bounds, method="COBYLA",
+            result = minimize(objective, initial_params_lev, bounds=bounds, method="TNC",
                               options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
 
         else:
-            result = least_squares(objective_lev, initial_params_lev, bounds=bounds, method="dogbox", gtol=1e-5, xtol=1e-5, ftol=1e-5)
+            result = minimize(objective_LS, initial_params_lev, bounds=bounds, method="trust-constr",
+                              options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
+            # result = least_squares(objective_lev, initial_params_lev, bounds=bounds, method="dogbox", gtol=1e-5, xtol=1e-5, ftol=1e-5)
 
 
         # Extract optimized parameters
