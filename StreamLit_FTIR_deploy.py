@@ -537,9 +537,9 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm, alg):
         parameter_result[sample] = optimized_params
 
     end_time = time.time()
-    st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples), alg)
+    conv_time = (end_time - start_time) / len(selected_samples)
     progress_bar.empty()
-    return parameter_result
+    return parameter_result, conv_time
 
 
 def plot_fitted_spec_lev(x_data, y_raw, params, initial_guess, sample):
@@ -967,7 +967,7 @@ def main():
                     RMSE = []
 
                     heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
-                    optimized_parameters_lev = peak_fit_lev(data, initial_guess_lev, selected_samples, algorithm, alg)
+                    optimized_parameters_lev, conv_time = peak_fit_lev(data, initial_guess_lev, selected_samples, algorithm, alg)
                     # end_time = time.time()
                     # st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples))
 
@@ -1095,6 +1095,8 @@ def main():
                 raw_data.to_excel(writer, sheet_name='Raw_Data', index=False)
                 peak_percentage.to_excel(writer, sheet_name='Peak_Percentages', index=False)
                 corr.to_excel(writer, sheet_name='Correlation_Matrix', index=True)
+                conv_time.to_excel(writer, sheet_name='Convergence_Time_perSample', index=True)
+
 
             # Reset the position to the beginning of the stream
             output.seek(0)
