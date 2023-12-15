@@ -967,7 +967,7 @@ def main():
                     RMSE = []
 
                     heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
-                    optimized_parameters_lev, conv_time = peak_fit_lev(data, initial_guess_lev, selected_samples, algorithm, alg)
+                    optimized_parameters_lev, st.session_state['conv_time'] = peak_fit_lev(data, initial_guess_lev, selected_samples, algorithm, alg)
                     # end_time = time.time()
                     # st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples))
 
@@ -1068,8 +1068,10 @@ def main():
             else:
                 raw_data = pd.DataFrame()
 
-            conv_time_df = pd.DataFrame([conv_time],columns=['Convergence Time per Sample in Seconds'])
-
+            if 'conv_time' in st.session_state:
+                conv_time_df = pd.DataFrame([st.session_state['conv_time']],columns=['Convergence Time per Sample in Seconds'])
+            else:
+                conv_time_df = pd.DataFrame()
             new_column_names = {'x':'Wavenumber [cm$^-$$^1$]'}
             new_row_names = []
 
