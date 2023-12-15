@@ -446,6 +446,7 @@ def composite_function_lev(x, params):
 
 
 def peak_fit_lev(data, initial_guess, selected_samples, algorithm, alg):
+    start_time = time.time()
 
     # drop empty rows in initial guesses
     initial_guess = initial_guess.dropna()
@@ -535,6 +536,8 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm, alg):
         optimized_params = result.x
         parameter_result[sample] = optimized_params
 
+    end_time = time.time()
+    st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples), alg)
     progress_bar.empty()
     return parameter_result
 
