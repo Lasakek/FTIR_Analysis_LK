@@ -445,7 +445,7 @@ def composite_function_lev(x, params):
 
 
 
-def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
+def peak_fit_lev(data, initial_guess, selected_samples, algorithm, alg):
 
     # drop empty rows in initial guesses
     initial_guess = initial_guess.dropna()
@@ -519,14 +519,14 @@ def peak_fit_lev(data, initial_guess, selected_samples, algorithm):
             convergence_tolerance = 1e-10
 
             # # Perform optimization
-            result = minimize(objective, initial_params_lev, bounds=bounds, method="L-BFGS-B",
+            result = minimize(objective, initial_params_lev, bounds=bounds, method=alg,
                               options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
 
         else:
             # Optimization settings
             max_iterations = 100000000
             convergence_tolerance = 1e-10
-            result = minimize(objective_LS, initial_params_lev, bounds=bounds, method="trust-constr",
+            result = minimize(objective_LS, initial_params_lev, bounds=bounds, method=alg,
                               options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
             # result = least_squares(objective_lev, initial_params_lev, bounds=bounds, method="dogbox", gtol=1e-5, xtol=1e-5, ftol=1e-5)
 
@@ -931,6 +931,7 @@ def main():
         st.divider()
         st.subheader('Adjust initial guesses of the Gauss-Curve parameters, if needed. :hatching_chick:')
         st.write("\n\n\n\n")
+        alg = st.select_slider("Select the Algorithm", options=["Powell", "L-BFGS-B", "trust-constr", "Nelder-Mead", "TNC", "COBYLA"])
 
         # Parameters for Gauss function
         st.markdown('**Fitting Parameters**')
@@ -963,7 +964,7 @@ def main():
                     RMSE = []
 
                     heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
-                    optimized_parameters_lev = peak_fit_lev(data, initial_guess_lev, selected_samples, algorithm)
+                    optimized_parameters_lev = peak_fit_lev(data, initial_guess_lev, selected_samples, algorithm, alg)
                     # end_time = time.time()
                     # st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples))
 
