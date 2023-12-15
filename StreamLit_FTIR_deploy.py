@@ -1068,6 +1068,7 @@ def main():
             else:
                 raw_data = pd.DataFrame()
 
+            conv_time_df = pd.DataFrame([conv_time],columns=['Convergence Time per Sample in Seconds'])
 
             new_column_names = {'x':'Wavenumber [cm$^-$$^1$]'}
             new_row_names = []
@@ -1095,7 +1096,7 @@ def main():
                 raw_data.to_excel(writer, sheet_name='Raw_Data', index=False)
                 peak_percentage.to_excel(writer, sheet_name='Peak_Percentages', index=False)
                 corr.to_excel(writer, sheet_name='Correlation_Matrix', index=True)
-                conv_time.to_excel(writer, sheet_name='Convergence_Time_perSample', index=True)
+                conv_time_df.to_excel(writer, sheet_name='Convergence_Time_perSample', index=True)
 
 
             # Reset the position to the beginning of the stream
