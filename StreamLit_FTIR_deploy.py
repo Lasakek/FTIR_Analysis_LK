@@ -707,7 +707,8 @@ def main():
 
     #-----------------all of the Sidebar Input--------------------------#
     st.sidebar.header("Upload your FTIR Files here:")
-    st.sidebar.write("6722726368:AAGSooHCBoWRZTRae-fIieihrGNiQ6WLvAE")
+    mystring="6722726368:AAGSooHCBoWRZTRae-fIieihrGNiQ6WLvAE"
+    st.sidebar.markdown(mystring)
 
 
 
