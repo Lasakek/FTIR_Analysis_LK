@@ -445,8 +445,10 @@ def composite_function_lev(x, params):
 
 
 
-def peak_fit_lev(data, initial_guess, selected_samples, algorithm, alg):
+def peak_fit(data, initial_guess, selected_samples, algorithm, alg):
     start_time = time.time()
+    if alg == "TRF":
+        alg = "trust-constr"
 
     # drop empty rows in initial guesses
     initial_guess = initial_guess.dropna()
@@ -934,7 +936,7 @@ def main():
         st.divider()
         st.subheader('Adjust initial guesses of the Gauss-Curve parameters, if needed. :hatching_chick:')
         st.write("\n\n\n\n")
-        alg = st.select_slider("Select the Algorithm", options=["Powell", "L-BFGS-B", "trust-constr", "Nelder-Mead", "TNC", "COBYLA"])
+        alg = st.select_slider("Select the Algorithm", options=["L-BFGS-B", "TRF"])
 
         # Parameters for Gauss function
         st.markdown('**Fitting Parameters**')
@@ -967,7 +969,7 @@ def main():
                     RMSE = []
 
                     heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
-                    optimized_parameters_lev, st.session_state['conv_time'] = peak_fit_lev(data, initial_guess_lev, selected_samples, algorithm, alg)
+                    optimized_parameters_lev, st.session_state['conv_time'] = peak_fit(data, initial_guess_lev, selected_samples, algorithm, alg)
                     # end_time = time.time()
                     # st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples))
 
