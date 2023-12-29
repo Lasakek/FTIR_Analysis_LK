@@ -936,7 +936,7 @@ def main():
         st.write("\n\n\n\n")
         algorithm = st.selectbox("Please choose the objective Function.",("Least-Square-Fit", "RMSE-Fit")
                                     ,index=None,placeholder="Select objective Function...",)
-        alg = st.selectbox("Select the Algorithm", ("L-BFGS-B", "TRF"), width=20
+        alg = st.selectbox("Select the Algorithm", ("L-BFGS-B", "TRF")
                            ,index=None,placeholder="Algorithm Selection...",)
 
 
