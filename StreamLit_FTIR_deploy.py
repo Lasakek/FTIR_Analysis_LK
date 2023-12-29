@@ -934,8 +934,10 @@ def main():
         st.divider()
         st.subheader('Adjust initial guesses of the Gauss-Curve parameters, if needed. :hatching_chick:')
         st.write("\n\n\n\n")
-        algorithm = st.select_slider("Choose the objective Function",options=["Least-Square-Fit", "RMSE-Fit"], width=20)
-        alg = st.select_slider("Select the Algorithm", options=["L-BFGS-B", "TRF"], width=20)
+        algorithm = st.st.selectbox("Please choose the objective Function.",("Least-Square-Fit", "RMSE-Fit")
+                                    ,index=None,placeholder="Select objective Function...",)
+        alg = st.selectbox("Select the Algorithm", ("L-BFGS-B", "TRF"), width=20
+                           ,index=None,placeholder="Algorithm Selection...",)
 
 
         # Parameters for Gauss function
@@ -961,53 +963,59 @@ def main():
 
             else:
 
-                start_decon = st.button("Press to Start Deconvolution")
+                if not algorithm or alg:
+                    st.warning("Please select an objective function and an algorithm.")
 
-                if start_decon:
-                    # start_time = time.time()
-                    RMSE = []
-
-                    heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
-                    optimized_parameters_lev, st.session_state['conv_time'] = peak_fit(data, initial_guess_lev, selected_samples, algorithm, alg)
-                    # end_time = time.time()
-                    # st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples))
-
-                    col1, col2, col3 = st.columns(3)
-
-                    for sample in selected_samples:
-                        for object in sample_objects:
-                            if sample == object.sample_name:
-                                title_name = object.give_file_name()
+                else:
 
 
-                                with col1:
+                    start_decon = st.button("Press to Start Deconvolution")
+
+                    if start_decon:
+                        # start_time = time.time()
+                        RMSE = []
+
+                        heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
+                        optimized_parameters_lev, st.session_state['conv_time'] = peak_fit(data, initial_guess_lev, selected_samples, algorithm, alg)
+                        # end_time = time.time()
+                        # st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples))
+
+                        col1, col2, col3 = st.columns(3)
+
+                        for sample in selected_samples:
+                            for object in sample_objects:
+                                if sample == object.sample_name:
+                                    title_name = object.give_file_name()
 
 
-                                    error = plot_fitted_spec_lev(data['x'], data[sample], optimized_parameters_lev[sample],
-                                                                    initial_guess_lev, title_name)
-                                    RMSE.append(error)
+                                    with col1:
 
-                                with col2:
-                                    peak_percentage = plot_peak_areas_lev(data['x'], data[sample], optimized_parameters_lev[sample],
-                                                                      initial_guess_lev, title_name)
-                                    heatmap_row = [sample] + peak_percentage
-                                    heatmap_df.loc[len(heatmap_df)] = heatmap_row
-                                    if 'heatmap_df' not in st.session_state:
-                                        st.session_state['heatmap_df'] = heatmap_df
-                                    else:
-                                        st.session_state['heatmap_df'] = heatmap_df
 
-                                with col3:
+                                        error = plot_fitted_spec_lev(data['x'], data[sample], optimized_parameters_lev[sample],
+                                                                        initial_guess_lev, title_name)
+                                        RMSE.append(error)
 
-                                    residual_err(data['x'], data[sample], optimized_parameters_lev[sample], title_name, algorithm)
+                                    with col2:
+                                        peak_percentage = plot_peak_areas_lev(data['x'], data[sample], optimized_parameters_lev[sample],
+                                                                          initial_guess_lev, title_name)
+                                        heatmap_row = [sample] + peak_percentage
+                                        heatmap_df.loc[len(heatmap_df)] = heatmap_row
+                                        if 'heatmap_df' not in st.session_state:
+                                            st.session_state['heatmap_df'] = heatmap_df
+                                        else:
+                                            st.session_state['heatmap_df'] = heatmap_df
 
-                    st.session_state['RMSE'] = RMSE
+                                    with col3:
 
-                    # heat_bool = True
-                    if 'heat_bool' not in st.session_state:
-                        st.session_state['heat_bool'] = True
-                    else:
-                        st.session_state['heat_bool'] = True
+                                        residual_err(data['x'], data[sample], optimized_parameters_lev[sample], title_name, algorithm)
+
+                        st.session_state['RMSE'] = RMSE
+
+                        # heat_bool = True
+                        if 'heat_bool' not in st.session_state:
+                            st.session_state['heat_bool'] = True
+                        else:
+                            st.session_state['heat_bool'] = True
 
 
     with tab5:
