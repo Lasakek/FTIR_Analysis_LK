@@ -505,17 +505,16 @@ def peak_fit(data, initial_guess, selected_samples, algorithm, alg):
             fit_quality = np.sum(((y_fitted - y_data) ** 2))
             return fit_quality
 
+        def objective(params):
+            y_fitted = composite_function_lev(x_data, params)
+            fit_quality = np.sqrt(np.mean((y_fitted - y_data) ** 2))
+            return fit_quality
 
 
         initial_params_lev = np.array(initial_params_lev)
         # st.write(type(initial_params_lev[0]))
 
-        if algorithm:
-
-            def objective(params):
-                y_fitted = composite_function_lev(x_data, params)
-                fit_quality = np.sqrt(np.mean((y_fitted - y_data) ** 2))
-                return fit_quality
+        if algorithm == "Least-Square-Fit":
 
             # Optimization settings
             max_iterations = 100000000
@@ -531,7 +530,6 @@ def peak_fit(data, initial_guess, selected_samples, algorithm, alg):
             convergence_tolerance = 1e-10
             result = minimize(objective_LS, initial_params_lev, bounds=bounds, method=alg,
                               options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
-            # result = least_squares(objective_lev, initial_params_lev, bounds=bounds, method="dogbox", gtol=1e-5, xtol=1e-5, ftol=1e-5)
 
 
         # Extract optimized parameters
@@ -936,7 +934,8 @@ def main():
         st.divider()
         st.subheader('Adjust initial guesses of the Gauss-Curve parameters, if needed. :hatching_chick:')
         st.write("\n\n\n\n")
-        alg = st.select_slider("Select the Algorithm", options=["L-BFGS-B", "TRF"])
+        algorithm = st.select_slider("Choose the objective Function",options=["Least-Square-Fit", "RMSE-Fit"], width=20)
+        alg = st.select_slider("Select the Algorithm", options=["L-BFGS-B", "TRF"], width=20)
 
 
         # Parameters for Gauss function
@@ -962,7 +961,6 @@ def main():
 
             else:
 
-                algorithm = st.toggle("Turn Off for Least Squares Fit | Turn on for RMSE Fit")
                 start_decon = st.button("Press to Start Deconvolution")
 
                 if start_decon:
