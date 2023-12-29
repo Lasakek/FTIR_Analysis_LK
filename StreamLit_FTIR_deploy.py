@@ -938,6 +938,7 @@ def main():
         st.write("\n\n\n\n")
         alg = st.select_slider("Select the Algorithm", options=["L-BFGS-B", "TRF"])
 
+
         # Parameters for Gauss function
         st.markdown('**Fitting Parameters**')
         default_data_lev = {
