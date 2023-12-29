@@ -963,11 +963,9 @@ def main():
 
             else:
 
-                if not algorithm or alg:
+                if algorithm is None or alg is None:
                     st.warning("Please select an objective function and an algorithm.")
-
                 else:
-
 
                     start_decon = st.button("Press to Start Deconvolution")
 
