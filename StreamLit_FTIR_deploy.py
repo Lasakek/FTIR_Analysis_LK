@@ -128,7 +128,7 @@ def csv_to_data(uploaded_file):
 
             y_values = y_values - baseline_substraction(y_values)
 
-            # y_values = savgol_filter(y_values, window_length=20, polyorder=4)
+            y_values = savgol_filter(y_values, window_length=20, polyorder=4)
 
             sample_name = f"Sample_{file_idx}"
 
@@ -186,7 +186,7 @@ def xml_to_data(uploaded_file):
             y_values = y_values - baseline_substraction(y_values)
 
 
-            # y_values = savgol_filter(y_values, window_length=20, polyorder=4)
+            y_values = savgol_filter(y_values, window_length=20, polyorder=4)
 
             fxv_tag = soup.find('parameter', {'name': 'FXV'})
             lxv_tag = soup.find('parameter', {'name': 'LXV'})
