@@ -128,7 +128,7 @@ def csv_to_data(uploaded_file):
 
             y_values = y_values - baseline_substraction(y_values)
 
-            y_values = savgol_filter(y_values, window_length=20, polyorder=4)
+            # y_values = savgol_filter(y_values, window_length=20, polyorder=4)
 
             sample_name = f"Sample_{file_idx}"
 
@@ -186,7 +186,7 @@ def xml_to_data(uploaded_file):
             y_values = y_values - baseline_substraction(y_values)
 
 
-            y_values = savgol_filter(y_values, window_length=20, polyorder=4)
+            # y_values = savgol_filter(y_values, window_length=20, polyorder=4)
 
             fxv_tag = soup.find('parameter', {'name': 'FXV'})
             lxv_tag = soup.find('parameter', {'name': 'LXV'})
@@ -319,7 +319,7 @@ def bar_plot(data):
         # Calculate the second derivative using numpy's gradient function
         # first_derivate = np.gradient(y,x)
         # second_derivative = -np.gradient(first_derivate, x)
-        second_derivative = -savgol_filter(y, window_length=15, polyorder=4, deriv=2)
+        second_derivative = -savgol_filter(y, window_length=15, polyorder=2, deriv=2)
 
         # print(d2y_dx2)
         peak_index, _ = find_peaks(second_derivative, prominence=0.0001)
@@ -385,7 +385,7 @@ def second_der_plots(data, show_plots):
             y_values = data[sample_col]
             # first_derivate = np.gradient(y_values,x_values)
             # second_derivative = np.gradient(first_derivate, x_values)
-            second_derivative = savgol_filter(y_values, window_length=15, polyorder=4, deriv=2)
+            second_derivative = savgol_filter(y_values, window_length=15, polyorder=2, deriv=2)
 
             second_derivative_data[sample_col] = -second_derivative
 
