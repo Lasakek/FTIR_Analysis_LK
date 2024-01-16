@@ -466,8 +466,8 @@ def peak_fit(data, initial_guess, selected_samples, algorithm, alg):
     # upper_bounds = [1641] + [1657] + [1657] + [1686] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
     # lower_bounds = [1623] + [1642] + [1648] + [1662] + [1674] + [0] * len(mu) + [0] * len(mu)
 
-    upper_bounds = [1640] + [1648] + [1660] + [1670] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
-    lower_bounds = [1625] + [1640] + [1648] + [1660] + [1675] + [0] * len(mu) + [0] * len(mu)
+    upper_bounds = [1640] + [1648] + [1660] + [1675] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
+    lower_bounds = [1620] + [1640] + [1648] + [1660] + [1675] + [0] * len(mu) + [0] * len(mu)
 
     # 4 secondary structures
     # upper_bounds = [1642] + [1650] + [1659] + [1699] + [np.inf] * len(mu) + [np.inf] * len(mu)
