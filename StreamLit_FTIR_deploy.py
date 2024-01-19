@@ -126,7 +126,7 @@ def csv_to_data(uploaded_file):
                 st.warning("Please ensure the correct structure of the .csv file: \n x-values, y-values\n x1, y1\n x2, y2")
 
 
-            # y_values = y_values - baseline_substraction(y_values)
+            y_values = y_values - baseline_substraction(y_values)
 
             y_values = savgol_filter(y_values, window_length=15, polyorder=2)
 
@@ -183,7 +183,7 @@ def xml_to_data(uploaded_file):
                 st.error(f"Could not find Y-values in {file}", icon="🚨")
 
 
-            # y_values = y_values - baseline_substraction(y_values)
+            y_values = y_values - baseline_substraction(y_values)
 
 
             y_values = savgol_filter(y_values, window_length=15, polyorder=2)
@@ -539,6 +539,8 @@ def peak_fit(data, initial_guess, selected_samples, algorithm, alg):
     conv_time = (end_time - start_time) / len(selected_samples)
     progress_bar.empty()
     return parameter_result, conv_time
+
+
 
 
 def plot_fitted_spec_lev(x_data, y_raw, params, initial_guess, sample):
