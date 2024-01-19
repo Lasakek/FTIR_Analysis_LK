@@ -318,8 +318,8 @@ def bar_plot(data):
 
         # Calculate the second derivative using numpy's gradient function
         # first_derivate = np.gradient(y,x)
-        second_derivative = -np.gradient(y, 2)
-        # second_derivative = -savgol_filter(y, window_length=15, polyorder=4, deriv=2)
+        # second_derivative = -np.gradient(y, 2)
+        second_derivative = -savgol_filter(y, window_length=15, polyorder=4, deriv=2)
 
         # print(d2y_dx2)
         peak_index, _ = find_peaks(second_derivative, prominence=0.0001)
@@ -383,8 +383,8 @@ def second_der_plots(data, show_plots):
         for sample_col in sample_columns:
             y_values = data[sample_col]
             # first_derivate = np.gradient(y_values,x_values)
-            second_derivative = -np.gradient(y_values, 2)
-            # second_derivative = savgol_filter(y_values, window_length=15, polyorder=4, deriv=2)
+            # second_derivative = -np.gradient(y_values, 2)
+            second_derivative = savgol_filter(y_values, window_length=15, polyorder=4, deriv=2)
 
             second_derivative_data[sample_col] = second_derivative
 
