@@ -126,7 +126,7 @@ def csv_to_data(uploaded_file):
                 st.warning("Please ensure the correct structure of the .csv file: \n x-values, y-values\n x1, y1\n x2, y2")
 
 
-            y_values = np.gradient(y_values,2) #- baseline_substraction(y_values)
+            # y_values = y_values - baseline_substraction(y_values)
 
             y_values = savgol_filter(y_values, window_length=15, polyorder=2)
 
@@ -183,7 +183,7 @@ def xml_to_data(uploaded_file):
                 st.error(f"Could not find Y-values in {file}", icon="🚨")
 
 
-            y_values = np.gradien(y_values,2) #- baseline_substraction(y_values)
+            # y_values = y_values - baseline_substraction(y_values)
 
 
             y_values = savgol_filter(y_values, window_length=15, polyorder=2)
@@ -318,8 +318,8 @@ def bar_plot(data):
 
         # Calculate the second derivative using numpy's gradient function
         # first_derivate = np.gradient(y,x)
-        # second_derivative = -np.gradient(first_derivate, x)
-        second_derivative = -savgol_filter(y, deriv=2) #window_length=15, polyorder=4,
+        second_derivative = -np.gradient(y, 2)
+        # second_derivative = -savgol_filter(y, window_length=15, polyorder=4, deriv=2)
 
         # print(d2y_dx2)
         peak_index, _ = find_peaks(second_derivative, prominence=0.0001)
@@ -383,10 +383,10 @@ def second_der_plots(data, show_plots):
         for sample_col in sample_columns:
             y_values = data[sample_col]
             # first_derivate = np.gradient(y_values,x_values)
-            # second_derivative = np.gradient(first_derivate, x_values)
-            second_derivative = savgol_filter(y_values,  deriv=2)#window_length=15, polyorder=4,
+            second_derivative = -np.gradient(y_values, 2)
+            # second_derivative = savgol_filter(y_values, window_length=15, polyorder=4, deriv=2)
 
-            second_derivative_data[sample_col] = -second_derivative
+            second_derivative_data[sample_col] = second_derivative
 
         # Get the list of sample columns for the second derivative data
         second_derivative_sample_columns = second_derivative_data.columns[1:]
