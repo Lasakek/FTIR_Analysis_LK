@@ -384,7 +384,7 @@ def second_der_plots(data, show_plots):
             y_values = data[sample_col]
             # first_derivate = np.gradient(y_values,x_values)
             # second_derivative = -np.gradient(y_values, 2)
-            second_derivative = savgol_filter(y_values, window_length=15, polyorder=4, deriv=2)
+            second_derivative = -savgol_filter(y_values, window_length=15, polyorder=4, deriv=2)
 
             second_derivative_data[sample_col] = second_derivative
 
