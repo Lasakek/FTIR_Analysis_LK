@@ -183,7 +183,7 @@ def xml_to_data(uploaded_file):
                 st.error(f"Could not find Y-values in {file}", icon="🚨")
 
 
-            y_values = y_values - #baseline_substraction(y_values)
+            y_values = y_values #- baseline_substraction(y_values)
 
 
             y_values = savgol_filter(y_values, window_length=15, polyorder=2)
