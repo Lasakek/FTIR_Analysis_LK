@@ -126,7 +126,7 @@ def csv_to_data(uploaded_file):
                 st.warning("Please ensure the correct structure of the .csv file: \n x-values, y-values\n x1, y1\n x2, y2")
 
 
-            y_values = y_values #- baseline_substraction(y_values)
+            y_values = np.gradient(y_values,2) #- baseline_substraction(y_values)
 
             y_values = savgol_filter(y_values, window_length=15, polyorder=2)
 
@@ -183,7 +183,7 @@ def xml_to_data(uploaded_file):
                 st.error(f"Could not find Y-values in {file}", icon="🚨")
 
 
-            y_values = y_values #- baseline_substraction(y_values)
+            y_values = np.gradien(y_values,2) #- baseline_substraction(y_values)
 
 
             y_values = savgol_filter(y_values, window_length=15, polyorder=2)
@@ -369,7 +369,6 @@ def bar_plot(data):
     st.write(peak_df)
 
 #----------Creating all the 2nd derivate Plots-----------#
-# is fucked up right now
 def second_der_plots(data, show_plots):
     # Define the number of columns for the layout
     num_columns = 4
