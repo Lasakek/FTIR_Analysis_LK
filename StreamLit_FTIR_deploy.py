@@ -633,7 +633,7 @@ def plot_peak_areas_lev(x_data, y_raw, params, initial_guess, sample):
 
 
 
-def residual_err(x, y, params, sample, algorithm):
+def residual_err(x, y, params, sample):
 
     y_fit = composite_function_lev(x, params)
 
@@ -917,11 +917,6 @@ def main():
         st.divider()
         st.subheader('Adjust initial guesses of the Gauss-Curve parameters, if needed. :hatching_chick:')
         st.write("\n\n\n\n")
-        algorithm = st.selectbox("Please choose the objective Function.",("Least-Square-Fit", "RMSE-Fit")
-                                    ,index=None,placeholder="Select objective Function...",)
-        alg = st.selectbox("Select the Algorithm", ("L-BFGS-B", "TRF")
-                           ,index=None,placeholder="Algorithm Selection...",)
-
 
         # Parameters for Gauss function
         st.markdown('**Fitting Parameters**')
@@ -986,7 +981,7 @@ def main():
 
                                 with col3:
 
-                                    residual_err(data['x'], data[sample], optimized_parameters_lev[sample], title_name, algorithm)
+                                    residual_err(data['x'], data[sample], optimized_parameters_lev[sample], title_name)
 
                     st.session_state['RMSE'] = RMSE
 
