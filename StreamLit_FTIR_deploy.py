@@ -444,10 +444,8 @@ def composite_function_lev(x, params):
 
 
 
-def peak_fit(data, initial_guess, selected_samples, algorithm, alg):
+def peak_fit(data, initial_guess, selected_samples):
     start_time = time.time()
-    if alg == "TRF":
-        alg = "trust-constr"
 
     # drop empty rows in initial guesses
     initial_guess = initial_guess.dropna()
@@ -490,19 +488,6 @@ def peak_fit(data, initial_guess, selected_samples, algorithm, alg):
         progress = (idx+1) / len(selected_samples)
         progress_bar.progress(progress, text=f"Fitting the Peaks of each Sample. Please wait...   Sample   {idx+1} of {len(selected_samples)} Samples in calculation")
 
-        # def objective_lev(params):
-        #     # st.write(1)
-        #     y_fitted = composite_function_lev(x_data, params)
-        #     # st.write(2)
-        #     fit_quality = y_fitted - y_data
-        #     RMSE = (np.sqrt(np.mean((y_fitted - y_data) ** 2)) / max(y_data) * 100)
-        #     # print(RMSE)
-        #     return np.array(fit_quality)
-
-        def objective_lev(params):
-            y_fitted = composite_function_lev(x_data, params)
-            fit_quality = y_fitted - y_data
-            return fit_quality
 
         def objective_LS(params):
             y_fitted = composite_function_lev(x_data, params)
@@ -518,24 +503,14 @@ def peak_fit(data, initial_guess, selected_samples, algorithm, alg):
         initial_params_lev = np.array(initial_params_lev)
         # st.write(type(initial_params_lev[0]))
 
-        if algorithm == "Least-Square-Fit":
 
-            result = least_squares(objective_lev, initial_params_lev, bounds=bounds, method="trf", gtol=1e-5, xtol=1e-5,
-                          ftol=1e-5)
-            # # Optimization settings
-            # max_iterations = 100000000
-            # convergence_tolerance = 1e-10
-            #
-            # # # Perform optimization
-            # result = minimize(objective, initial_params_lev, bounds=bounds, method=alg,
-            #                   options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
+        # Optimization settings
+        max_iterations = 100000000
+        convergence_tolerance = 1e-10
 
-        else:
-            # Optimization settings
-            max_iterations = 100000000
-            convergence_tolerance = 1e-10
-            result = minimize(objective_LS, initial_params_lev, bounds=bounds, method=alg,
-                              options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
+        # # Perform optimization
+        result = minimize(objective, initial_params_lev, bounds=bounds, method='trust-constr',
+                          options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
 
 
         # Extract optimized parameters
@@ -971,57 +946,55 @@ def main():
 
             else:
 
-                if algorithm is None or alg is None:
-                    st.warning("Please select an objective function and an algorithm.")
-                else:
-
-                    start_decon = st.button("Press to Start Deconvolution")
-
-                    if start_decon:
-                        # start_time = time.time()
-                        RMSE = []
-
-                        heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
-                        optimized_parameters_lev, st.session_state['conv_time'] = peak_fit(data, initial_guess_lev, selected_samples, algorithm, alg)
-                        # end_time = time.time()
-                        # st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples))
-
-                        col1, col2, col3 = st.columns(3)
-
-                        for sample in selected_samples:
-                            for object in sample_objects:
-                                if sample == object.sample_name:
-                                    title_name = object.give_file_name()
 
 
-                                    with col1:
+                start_decon = st.button("Press to Start Deconvolution")
+
+                if start_decon:
+                    # start_time = time.time()
+                    RMSE = []
+
+                    heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
+                    optimized_parameters_lev, st.session_state['conv_time'] = peak_fit(data, initial_guess_lev, selected_samples)
+                    # end_time = time.time()
+                    # st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples))
+
+                    col1, col2, col3 = st.columns(3)
+
+                    for sample in selected_samples:
+                        for object in sample_objects:
+                            if sample == object.sample_name:
+                                title_name = object.give_file_name()
 
 
-                                        error = plot_fitted_spec_lev(data['x'], data[sample], optimized_parameters_lev[sample],
-                                                                        initial_guess_lev, title_name)
-                                        RMSE.append(error)
+                                with col1:
 
-                                    with col2:
-                                        peak_percentage = plot_peak_areas_lev(data['x'], data[sample], optimized_parameters_lev[sample],
-                                                                          initial_guess_lev, title_name)
-                                        heatmap_row = [sample] + peak_percentage
-                                        heatmap_df.loc[len(heatmap_df)] = heatmap_row
-                                        if 'heatmap_df' not in st.session_state:
-                                            st.session_state['heatmap_df'] = heatmap_df
-                                        else:
-                                            st.session_state['heatmap_df'] = heatmap_df
 
-                                    with col3:
+                                    error = plot_fitted_spec_lev(data['x'], data[sample], optimized_parameters_lev[sample],
+                                                                    initial_guess_lev, title_name)
+                                    RMSE.append(error)
 
-                                        residual_err(data['x'], data[sample], optimized_parameters_lev[sample], title_name, algorithm)
+                                with col2:
+                                    peak_percentage = plot_peak_areas_lev(data['x'], data[sample], optimized_parameters_lev[sample],
+                                                                      initial_guess_lev, title_name)
+                                    heatmap_row = [sample] + peak_percentage
+                                    heatmap_df.loc[len(heatmap_df)] = heatmap_row
+                                    if 'heatmap_df' not in st.session_state:
+                                        st.session_state['heatmap_df'] = heatmap_df
+                                    else:
+                                        st.session_state['heatmap_df'] = heatmap_df
 
-                        st.session_state['RMSE'] = RMSE
+                                with col3:
 
-                        # heat_bool = True
-                        if 'heat_bool' not in st.session_state:
-                            st.session_state['heat_bool'] = True
-                        else:
-                            st.session_state['heat_bool'] = True
+                                    residual_err(data['x'], data[sample], optimized_parameters_lev[sample], title_name, algorithm)
+
+                    st.session_state['RMSE'] = RMSE
+
+                    # heat_bool = True
+                    if 'heat_bool' not in st.session_state:
+                        st.session_state['heat_bool'] = True
+                    else:
+                        st.session_state['heat_bool'] = True
 
 
     with tab5:
