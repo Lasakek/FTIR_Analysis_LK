@@ -509,7 +509,7 @@ def peak_fit(data, initial_guess, selected_samples):
         convergence_tolerance = 1e-10
 
         # # Perform optimization
-        result = minimize(objective, initial_params_lev, bounds=bounds, method='trust-constr',
+        result = minimize(objective_LS, initial_params_lev, bounds=bounds, method='trust-constr',
                           options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
 
 
