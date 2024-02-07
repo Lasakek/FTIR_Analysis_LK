@@ -520,7 +520,7 @@ def peak_fit(data, initial_guess, selected_samples, algorithm, alg):
 
         if algorithm == "Least-Square-Fit":
 
-            least_squares(objective_lev, initial_params_lev, bounds=bounds, method="trf", gtol=1e-5, xtol=1e-5,
+            result = least_squares(objective_lev, initial_params_lev, bounds=bounds, method="trf", gtol=1e-5, xtol=1e-5,
                           ftol=1e-5)
             # # Optimization settings
             # max_iterations = 100000000
