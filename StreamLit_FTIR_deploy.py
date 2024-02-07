@@ -499,6 +499,11 @@ def peak_fit(data, initial_guess, selected_samples, algorithm, alg):
         #     # print(RMSE)
         #     return np.array(fit_quality)
 
+        def objective_lev(params):
+            y_fitted = composite_function_lev(x_data, params)
+            fit_quality = y_fitted - y_data
+            return fit_quality
+
         def objective_LS(params):
             y_fitted = composite_function_lev(x_data, params)
             fit_quality = np.sum(((y_fitted - y_data) ** 2))
@@ -515,13 +520,15 @@ def peak_fit(data, initial_guess, selected_samples, algorithm, alg):
 
         if algorithm == "Least-Square-Fit":
 
-            # Optimization settings
-            max_iterations = 100000000
-            convergence_tolerance = 1e-10
-
-            # # Perform optimization
-            result = minimize(objective, initial_params_lev, bounds=bounds, method=alg,
-                              options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
+            least_squares(objective_lev, initial_params_lev, bounds=bounds, method="trf", gtol=1e-5, xtol=1e-5,
+                          ftol=1e-5)
+            # # Optimization settings
+            # max_iterations = 100000000
+            # convergence_tolerance = 1e-10
+            #
+            # # # Perform optimization
+            # result = minimize(objective, initial_params_lev, bounds=bounds, method=alg,
+            #                   options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
 
         else:
             # Optimization settings
