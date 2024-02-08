@@ -13,17 +13,10 @@ from scipy.optimize import minimize, least_squares, Bounds
 import matplotlib.pyplot as plt
 import plotly.express as px
 import numpy as np
-from scipy.special import wofz
 from PIL import Image
 from io import BytesIO
 import base64
 import struct
-from array import array
-import xlsxwriter
-from xlsxwriter import Workbook
-
-#--------------------------------Defaults------------------------------#
-# Default data
 
 
 #---------Class for storing/handling Sample Information-----#
@@ -272,7 +265,7 @@ def pca_df(data):
     pca_df = pd.DataFrame(data=pca_result, columns=[f"PC{i + 1}" for i in range(n_components)])
 
     return pca_df
-#---Problem with amount of samples = 1
+
 def PCA_Plot(data, selected_samples):
     if len(data.keys()) <= 3:
         st.warning("Please select at least 3 Samples to Perform PCA", icon="🚨")
@@ -430,16 +423,17 @@ def second_der_plots(data, show_plots):
 #---------Peak Fitting Functions------------------#
 
 #------LEV-------------------#
-def V_lev(x, A, mu, FWHM):
+def V_Gauss(x, A, mu, FWHM):
     return A * np.exp(-(x - mu) ** 2 / (2 * FWHM ** 2))
-def composite_function_lev(x, params):
+
+def composite_function_Gauss(x, params):
     num_peaks = len(params) // 3
     total = np.zeros_like(x)
     for i in range(num_peaks):
         mu = params[i]
         A = params[num_peaks + i]
         FWHM = params[num_peaks * 2 + i]
-        total += V_lev(x, A, mu, FWHM)
+        total += V_Gauss(x, A, mu, FWHM)
     return total
 
 
@@ -460,15 +454,8 @@ def peak_fit(data, initial_guess, selected_samples):
 
     # Combine all bounds into a single list
     # 5 secondary structures
-    # upper_bounds = [1641] + [1657] + [1657] + [1686] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
-    # lower_bounds = [1623] + [1642] + [1648] + [1662] + [1674] + [0] * len(mu) + [0] * len(mu)
-
     upper_bounds = [1640] + [1648] + [1660] + [1670] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
     lower_bounds = [1620] + [1640] + [1648] + [1660] + [1675] + [0] * len(mu) + [0] * len(mu)
-
-    # 4 secondary structures
-    # upper_bounds = [1642] + [1650] + [1659] + [1699] + [np.inf] * len(mu) + [np.inf] * len(mu)
-    # lower_bounds = [1628] + [1643] + [1650] + [1660] + [0] * len(mu) + [0] * len(mu)
 
     # upper_bounds = [center + 50 for center in mu] + [np.inf] * len(mu) + [np.inf] * len(mu)
     # lower_bounds = [center - 50 for center in mu] + [0] * len(mu) + [0] * len(mu)
@@ -489,20 +476,24 @@ def peak_fit(data, initial_guess, selected_samples):
         progress_bar.progress(progress, text=f"Fitting the Peaks of each Sample. Please wait...   Sample   {idx+1} of {len(selected_samples)} Samples in calculation")
 
 
-        def objective_LS(params):
-            y_fitted = composite_function_lev(x_data, params)
-            fit_quality = np.sum(((y_fitted - y_data) ** 2))
-            return fit_quality
+
 
         def objective_LSQ(params):
-            y_fitted = composite_function_lev(x_data, params)
+            y_fitted = composite_function_Gauss(x_data, params)
             fit_quality = y_fitted - y_data
             return fit_quality
-
-        def objective(params):
-            y_fitted = composite_function_lev(x_data, params)
-            fit_quality = np.sqrt(np.mean((y_fitted - y_data) ** 2))
-            return fit_quality
+        
+        # manual Least_Square
+        # def objective_LS(params):
+        #     y_fitted = composite_function_Gauss(x_data, params)
+        #     fit_quality = np.sum(((y_fitted - y_data) ** 2))
+        #     return fit_quality
+        
+        # RMSE
+        # def objective(params):
+        #     y_fitted = composite_function_Gauss(x_data, params)
+        #     fit_quality = np.sqrt(np.mean((y_fitted - y_data) ** 2))
+        #     return fit_quality
 
 
         initial_params_lev = np.array(initial_params_lev)
@@ -513,12 +504,15 @@ def peak_fit(data, initial_guess, selected_samples):
         max_iterations = 10000000
         convergence_tolerance = 1e-5
 
-        # # Perform optimization
-        result = minimize(objective_LS, initial_params_lev, bounds=bounds, method='L-BFGS-B',
-                          options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
+        # Perform optimization
+        result = least_squares(objective_LSQ, initial_params_lev, bounds=bounds, method="trf", gtol=1e-5, xtol=1e-5,
+                      ftol=1e-5)
+        
+        # does the same, but slower
+        # result = minimize(objective_LS, initial_params_lev, bounds=bounds, method='trust-constr',
+        #                   options={'maxiter': max_iterations, 'gtol': convergence_tolerance}) 
 
-        # result = least_squares(objective_LSQ, initial_params_lev, bounds=bounds, method="trf", gtol=1e-5, xtol=1e-5,
-        #               ftol=1e-5)
+
 
         # Extract optimized parameters
         optimized_params = result.x
@@ -532,7 +526,7 @@ def peak_fit(data, initial_guess, selected_samples):
 
 
 
-def plot_fitted_spec_lev(x_data, y_raw, params, initial_guess, sample):
+def plot_fitted_spec_Gauss(x_data, y_raw, params, initial_guess, sample):
     # drop empty rows
     initial_guess = initial_guess.dropna()
     total = np.zeros_like(x_data)
@@ -545,7 +539,7 @@ def plot_fitted_spec_lev(x_data, y_raw, params, initial_guess, sample):
         mu = params[i]
         A = params[num_peaks + i]
         FWHM = params[num_peaks * 2 + i]
-        F_peak = V_lev(x_data, A, mu, FWHM)
+        F_peak = V_Gauss(x_data, A, mu, FWHM)
         total += F_peak
         peak_funcs[peak] = F_peak
         key_list.append(peak)
@@ -580,7 +574,7 @@ def plot_fitted_spec_lev(x_data, y_raw, params, initial_guess, sample):
 
     return RMSE
 
-def plot_peak_areas_lev(x_data, y_raw, params, initial_guess, sample):
+def plot_peak_areas_Gauss(x_data, y_raw, params, initial_guess, sample):
     # drop empty rows in initial_guess
     initial_guess = initial_guess.dropna()
     total = np.zeros_like(x_data)
@@ -592,7 +586,7 @@ def plot_peak_areas_lev(x_data, y_raw, params, initial_guess, sample):
         mu = params[i]
         A = params[num_peaks + i]
         FWHM = params[num_peaks * 2 + i]
-        F_peak = V_lev(x_data, A, mu, FWHM)
+        F_peak = V_Gauss(x_data, A, mu, FWHM)
         total += F_peak
         peak_funcs[peak] = F_peak
 
@@ -642,7 +636,7 @@ def plot_peak_areas_lev(x_data, y_raw, params, initial_guess, sample):
 
 def residual_err(x, y, params, sample):
 
-    y_fit = composite_function_lev(x, params)
+    y_fit = composite_function_Gauss(x, params)
 
     residual = y-y_fit
     res = pd.DataFrame()
@@ -971,12 +965,12 @@ def main():
                                 with col1:
 
 
-                                    error = plot_fitted_spec_lev(data['x'], data[sample], optimized_parameters_lev[sample],
+                                    error = plot_fitted_spec_Gauss(data['x'], data[sample], optimized_parameters_lev[sample],
                                                                     initial_guess_lev, title_name)
                                     RMSE.append(error)
 
                                 with col2:
-                                    peak_percentage = plot_peak_areas_lev(data['x'], data[sample], optimized_parameters_lev[sample],
+                                    peak_percentage = plot_peak_areas_Gauss(data['x'], data[sample], optimized_parameters_lev[sample],
                                                                       initial_guess_lev, title_name)
                                     heatmap_row = [sample] + peak_percentage
                                     heatmap_df.loc[len(heatmap_df)] = heatmap_row
