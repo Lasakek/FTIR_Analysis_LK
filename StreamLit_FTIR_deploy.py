@@ -427,7 +427,7 @@ def second_der_plots(data, show_plots):
 
 
 
-#---------Peak Deconvolution Functions------------------#
+#---------Peak Fitting Functions------------------#
 
 #------LEV-------------------#
 def V_lev(x, A, mu, FWHM):
@@ -512,7 +512,7 @@ def peak_fit(data, initial_guess, selected_samples):
         # result = minimize(objective_LS, initial_params_lev, bounds=bounds, method='trust-constr',
         #                   options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
 
-        least_squares(objective_LS, initial_params_lev, bounds=bounds, method="trf", gtol=1e-8, xtol=1e-8,
+        result = least_squares(objective_LS, initial_params_lev, bounds=bounds, method="trf", gtol=1e-8, xtol=1e-8,
                       ftol=1e-8)
 
         # Extract optimized parameters
@@ -816,7 +816,7 @@ def main():
             st.write("\n")
 
             st.subheader("Peak Fitting")
-            st.markdown("**Peak fitting, also known as deconvolution, is a data analysis technique used to separate and quantify individual peaks or components within a complex dataset. This technique is particularly useful when multiple overlapping peaks are present in the data, making it challenging to extract meaningful information.\n The first step in this process is to provide reasonable choice of the amount of peaks, their location and shape. These are used to construct a initial comosite function of all the peaks. The objective is to minimize the difference between the original data and the predicted function. This is achieved, by iteratively adjusting the used peak parameters. Different minimization problems can be defined and various algorithmsfor the parameter optimization, be used. Also can different peak shapes be applied. These options can result in fairly different outcomes when there is a high degree of overlapping present. The residuals between original and fitted data can give some kind of direction of how good a fit is. A high randomnes of these residuals indicates a good fit, a high grade of order (function-like/wavy shapes) indicates a bad fit.**")
+            st.markdown("**Peak fitting, is a data analysis technique used to separate and quantify individual peaks or components within a complex dataset. This technique is particularly useful when multiple overlapping peaks are present in the data, making it challenging to extract meaningful information.\n The first step in this process is to provide reasonable choice of the amount of peaks, their location and shape. These are used to construct a initial comosite function of all the peaks. The objective is to minimize the difference between the original data and the predicted function. This is achieved, by iteratively adjusting the used peak parameters. Different minimization problems can be defined and various algorithmsfor the parameter optimization, be used. Also can different peak shapes be applied. These options can result in fairly different outcomes when there is a high degree of overlapping present. The residuals between original and fitted data can give some kind of direction of how good a fit is. A high randomnes of these residuals indicates a good fit, a high grade of order (function-like/wavy shapes) indicates a bad fit.**")
 
             st.write("\n")
 
@@ -887,7 +887,6 @@ def main():
     with tab3:
         st.header("Peak Identification")
         # st.markdown(
-        #     '''*Peak deconvolution is a process of decomposing overlapping peaks to extract information about the hidden peak. Peak deconvolution can provide more accurate and detailed information about overlapping peaks, allowing for better analysis and interpretation of the data.*''')
         st.divider()
         if not select_samples:
             st.warning("Please upload files and select at least one Sample.")
@@ -945,7 +944,7 @@ def main():
 
 
 
-                start_decon = st.button("Press to Start Deconvolution")
+                start_decon = st.button("Press to Start Peak Fitting")
 
                 if start_decon:
                     # start_time = time.time()
@@ -1003,7 +1002,7 @@ def main():
 
         if 'heat_bool' not in st.session_state:
                 st.session_state['heat_bool'] = False
-                st.warning("The Heatmap is based on the Peak Deconvolution Values, so please do this first. :fox_face:")
+                st.warning("The Heatmap is based on the Peak Fitting Values, so please do this first. :fox_face:")
 
         else:
             if st.session_state['heat_bool'] == True:
@@ -1029,7 +1028,7 @@ def main():
 
 
             else:
-                st.warning("The Heatmap is based on the Peak Deconvolution Values, so please do this first. :fox_face:")
+                st.warning("The Heatmap is based on the Peak Fitting Values, so please do this first. :fox_face:")
 
     with tab6:
         st.title("Here you can download your Results :open_hands:")
