@@ -512,8 +512,8 @@ def peak_fit(data, initial_guess, selected_samples):
         # result = minimize(objective_LS, initial_params_lev, bounds=bounds, method='trust-constr',
         #                   options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
 
-        result = least_squares(objective_LS, initial_params_lev, bounds=bounds, method="trf", gtol=1e-8, xtol=1e-8,
-                      ftol=1e-8)
+        result = least_squares(objective_LS, initial_params_lev, bounds=bounds, method="trf", gtol=1e-5, xtol=1e-5,
+                      ftol=1e-5)
 
         # Extract optimized parameters
         optimized_params = result.x
