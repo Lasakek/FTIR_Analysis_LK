@@ -502,7 +502,7 @@ def peak_fit(data, initial_guess, selected_samples, switch):
 
         # Optimization settings
         max_iterations = 10000000
-        convergence_tolerance = 1e-5
+        convergence_tolerance = 1e-8
 
         if switch:
             # Perform optimization
@@ -932,7 +932,7 @@ def main():
 
         initial_guess_lev = st.data_editor(df_lev, num_rows='dynamic', hide_index=True)
         parameters_lev = ["Sample"] + initial_guess_lev['peak'].tolist()
-        switch = st.toggle("Objective Function:  ON = Least-Square | OFF = RMSE")
+        switch = st.toggle("Objective Function:  ON = Least-Square | OFF = RMSE", value=True)
 
         if not select_samples:
             st.warning("Please upload files and select at least one Sample.")
