@@ -502,7 +502,7 @@ def peak_fit(data, initial_guess, selected_samples, switch):
 
         # Optimization settings
         max_iterations = 10000000
-        convergence_tolerance = 1e-8
+        convergence_tolerance = 1e-5
 
         if switch:
             # Perform optimization
