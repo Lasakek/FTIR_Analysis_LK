@@ -511,7 +511,7 @@ def peak_fit(data, initial_guess, selected_samples, switch):
 
         else:
             # RMSE fit
-            result = minimize(objective, initial_params_lev, bounds=bounds, method='trust-constr',
+            result = minimize(objective, initial_params_lev, bounds=bounds, method='L-BFGS-B',
                               options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
 
 
