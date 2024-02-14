@@ -438,7 +438,7 @@ def composite_function_Gauss(x, params):
 
 
 
-def peak_fit(data, initial_guess, selected_samples):
+def peak_fit(data, initial_guess, selected_samples, switch):
     start_time = time.time()
 
     # drop empty rows in initial guesses
@@ -478,7 +478,7 @@ def peak_fit(data, initial_guess, selected_samples):
 
 
 
-        def objective_LSQ(params):
+        def objective_LS(params):
             y_fitted = composite_function_Gauss(x_data, params)
             fit_quality = y_fitted - y_data
             return fit_quality
@@ -490,10 +490,10 @@ def peak_fit(data, initial_guess, selected_samples):
         #     return fit_quality
         
         # RMSE
-        # def objective(params):
-        #     y_fitted = composite_function_Gauss(x_data, params)
-        #     fit_quality = np.sqrt(np.mean((y_fitted - y_data) ** 2))
-        #     return fit_quality
+        def objective(params):
+            y_fitted = composite_function_Gauss(x_data, params)
+            fit_quality = np.sqrt(np.mean((y_fitted - y_data) ** 2))
+            return fit_quality
 
 
         initial_params_lev = np.array(initial_params_lev)
@@ -502,15 +502,17 @@ def peak_fit(data, initial_guess, selected_samples):
 
         # Optimization settings
         max_iterations = 10000000
-        convergence_tolerance = 1e-5
+        convergence_tolerance = 1e-8
 
-        # Perform optimization
-        result = least_squares(objective_LSQ, initial_params_lev, bounds=bounds, method="trf", gtol=1e-5, xtol=1e-5,
-                      ftol=1e-5)
-        
-        # does the same, but slower
-        # result = minimize(objective_LS, initial_params_lev, bounds=bounds, method='trust-constr',
-        #                   options={'maxiter': max_iterations, 'gtol': convergence_tolerance}) 
+        if switch:
+            # Perform optimization
+            result = least_squares(objective_LS, initial_params_lev, bounds=bounds, method="trf", gtol=1e-8, xtol=1e-8,
+                          ftol=1e-8)
+
+        else:
+            # RMSE fit
+            result = minimize(objective, initial_params_lev, bounds=bounds, method='trust-constr',
+                              options={'maxiter': max_iterations, 'gtol': convergence_tolerance})
 
 
 
@@ -930,7 +932,7 @@ def main():
 
         initial_guess_lev = st.data_editor(df_lev, num_rows='dynamic', hide_index=True)
         parameters_lev = ["Sample"] + initial_guess_lev['peak'].tolist()
-
+        switch = st.toggle("Objective Function:  ON = Least-Square | OFF = RMSE")
 
         if not select_samples:
             st.warning("Please upload files and select at least one Sample.")
@@ -950,7 +952,7 @@ def main():
                     RMSE = []
 
                     heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
-                    optimized_parameters_lev, st.session_state['conv_time'] = peak_fit(data, initial_guess_lev, selected_samples)
+                    optimized_parameters_lev, st.session_state['conv_time'] = peak_fit(data, initial_guess_lev, selected_samples, switch)
                     # end_time = time.time()
                     # st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples))
 
