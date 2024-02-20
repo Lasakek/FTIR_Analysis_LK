@@ -952,7 +952,8 @@ def main():
                     RMSE = []
 
                     heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
-                    optimized_parameters_lev, st.session_state['conv_time'] = peak_fit(data, initial_guess_lev, selected_samples, switch)
+                    optimized_parameters, st.session_state['conv_time'] = peak_fit(data, initial_guess_lev, selected_samples, switch)
+                    st.write(optimized_parameters)
                     # end_time = time.time()
                     # st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples))
 
@@ -967,12 +968,12 @@ def main():
                                 with col1:
 
 
-                                    error = plot_fitted_spec_Gauss(data['x'], data[sample], optimized_parameters_lev[sample],
+                                    error = plot_fitted_spec_Gauss(data['x'], data[sample], optimized_parameters[sample],
                                                                     initial_guess_lev, title_name)
                                     RMSE.append(error)
 
                                 with col2:
-                                    peak_percentage = plot_peak_areas_Gauss(data['x'], data[sample], optimized_parameters_lev[sample],
+                                    peak_percentage = plot_peak_areas_Gauss(data['x'], data[sample], optimized_parameters[sample],
                                                                       initial_guess_lev, title_name)
                                     heatmap_row = [sample] + peak_percentage
                                     heatmap_df.loc[len(heatmap_df)] = heatmap_row
@@ -983,7 +984,7 @@ def main():
 
                                 with col3:
 
-                                    residual_err(data['x'], data[sample], optimized_parameters_lev[sample], title_name)
+                                    residual_err(data['x'], data[sample], optimized_parameters[sample], title_name)
 
                     st.session_state['RMSE'] = RMSE
 
