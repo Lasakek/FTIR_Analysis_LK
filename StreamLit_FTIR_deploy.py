@@ -121,7 +121,7 @@ def csv_to_data(uploaded_file):
 
             y_values = y_values - baseline_substraction(y_values)
 
-            # y_values = savgol_filter(y_values, window_length=15, polyorder=2)
+            y_values = savgol_filter(y_values, window_length=15, polyorder=2)
 
             sample_name = f"Sample_{file_idx}"
 
@@ -179,7 +179,7 @@ def xml_to_data(uploaded_file):
             y_values = y_values - baseline_substraction(y_values)
 
 
-            # y_values = savgol_filter(y_values, window_length=15, polyorder=2)
+            y_values = savgol_filter(y_values, window_length=15, polyorder=2)
 
             fxv_tag = soup.find('parameter', {'name': 'FXV'})
             lxv_tag = soup.find('parameter', {'name': 'LXV'})
@@ -954,6 +954,7 @@ def main():
                     heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
                     optimized_parameters, st.session_state['conv_time'] = peak_fit(data, initial_guess_lev, selected_samples, switch)
                     # end_time = time.time()
+                    # st.write(optimized_parameters)
                     # st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples))
 
                     col1, col2, col3 = st.columns(3)
