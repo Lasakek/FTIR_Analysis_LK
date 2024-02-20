@@ -954,7 +954,7 @@ def main():
                     heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
                     optimized_parameters, st.session_state['conv_time'] = peak_fit(data, initial_guess_lev, selected_samples, switch)
                     # end_time = time.time()
-                    # st.write(optimized_parameters)
+                    st.write(optimized_parameters)
                     # st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples))
 
                     col1, col2, col3 = st.columns(3)
