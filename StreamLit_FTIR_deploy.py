@@ -448,14 +448,20 @@ def peak_fit(data, initial_guess, selected_samples, switch):
     mu = initial_guess['center']
     A = initial_guess['amplitude']
     FWHM = initial_guess['FWHM']
+    mu_low = initial_guess['center lower bound']
+    mu_high = initial_guess['center upper bound']
 
     initial_params_lev = np.concatenate((mu, A, FWHM))
 
 
     # Combine all bounds into a single list
     # 5 secondary structures
-    upper_bounds = [1640] + [1648] + [1660] + [1670] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
-    lower_bounds = [1620] + [1640] + [1648] + [1660] + [1675] + [0] * len(mu) + [0] * len(mu)
+    upper_bounds = [x for x in mu_high] + [np.inf] * len(mu) + [np.inf] * len(mu)
+    lower_bounds = [x for x in mu_low] + [0] * len(mu) + [0] * len(mu)
+
+
+    # upper_bounds = [1640] + [1648] + [1660] + [1670] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
+    # lower_bounds = [1620] + [1640] + [1648] + [1660] + [1675] + [0] * len(mu) + [0] * len(mu)
 
     # upper_bounds = [center + 50 for center in mu] + [np.inf] * len(mu) + [np.inf] * len(mu)
     # lower_bounds = [center - 50 for center in mu] + [0] * len(mu) + [0] * len(mu)
@@ -554,7 +560,8 @@ def plot_fitted_spec_Gauss(x_data, y_raw, params, initial_guess, sample):
 
 
     RMSE = round((np.sqrt(np.mean((total - y_raw)**2))/max(y_raw)*100),2)
-
+    # if RMSE >= 1.5:
+    #     st.warning("Bad Fit - RMSE => 1.5%. Careful interpretation of data is adviced.")
     title = "Fitted Spectrum " + str(sample)
     config = {
         'toImageButtonOptions': {
@@ -924,10 +931,15 @@ def main():
         st.markdown('**Fitting Parameters**')
         default_data_lev = {
             'peak': ['β-Sheet', 'random-coil', 'α-Helix', 'β-Turn', 'β-Sheet_2'],
-            'center': [1632, 1644, 1654, 1665, 1685],
             'amplitude': [0.6, 0.4, 0.1, 0.1, 0.1],
-            'FWHM': [10, 6, 4, 4, 4]
+            'FWHM': [10, 6, 4, 4, 4],
+            'center': [1632, 1644, 1654, 1665, 1685],
+            'center lower bound': [1620, 1640, 1648, 1660, 1675],
+            'center upper bound': [1640, 1648, 1660, 1670, 1695],
         }
+
+        # upper_bounds = [1640] + [1648] + [1660] + [1670] + [1695] + [np.inf] * len(mu) + [np.inf] * len(mu)
+        # lower_bounds = [1620] + [1640] + [1648] + [1660] + [1675] + [0] * len(mu) + [0] * len(mu)
         df_lev = pd.DataFrame(default_data_lev)
 
         initial_guess_lev = st.data_editor(df_lev, num_rows='dynamic', hide_index=True)
@@ -954,7 +966,7 @@ def main():
                     heatmap_df = pd.DataFrame(columns=parameters_lev).dropna(axis=1, how='any')
                     optimized_parameters, st.session_state['conv_time'] = peak_fit(data, initial_guess_lev, selected_samples, switch)
                     # end_time = time.time()
-                    st.write(optimized_parameters)
+                    # st.write(optimized_parameters)
                     # st.write("This is the average convergence time per sample:",(start_time-end_time)/len(selected_samples))
 
                     col1, col2, col3 = st.columns(3)
@@ -964,7 +976,10 @@ def main():
                             if sample == object.sample_name:
                                 title_name = object.give_file_name()
 
-
+                                total = np.zeros_like(data['x'])
+                                # RMSE = round((np.sqrt(np.mean((total - data[sample]) ** 2)) / max(data[sample]) * 100), 2)
+                                # if RMSE >= 1.5:
+                                #     st.warning("Bad Fit - RMSE => 1.5%. Careful interpretation of data is adviced.")
                                 with col1:
 
 
