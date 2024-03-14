@@ -560,8 +560,8 @@ def plot_fitted_spec_Gauss(x_data, y_raw, params, initial_guess, sample):
 
 
     RMSE = round((np.sqrt(np.mean((total - y_raw)**2))/max(y_raw)*100),2)
-    # if RMSE >= 1.5:
-    #     st.warning("Bad Fit - RMSE => 1.5%. Careful interpretation of data is adviced.")
+    if RMSE >= 1.5:
+        st.warning("Bad Fit - RMSE => 1.5%. Careful interpretation of data is adviced.")
     title = "Fitted Spectrum " + str(sample)
     config = {
         'toImageButtonOptions': {
@@ -979,6 +979,7 @@ def main():
                                 total = np.zeros_like(data['x'])
                                 # RMSE = round((np.sqrt(np.mean((total - data[sample]) ** 2)) / max(data[sample]) * 100), 2)
                                 # if RMSE >= 1.5:
+                                # if RMSE >= 15:
                                 #     st.warning("Bad Fit - RMSE => 1.5%. Careful interpretation of data is adviced.")
                                 with col1:
 
